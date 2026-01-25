@@ -1,5 +1,7 @@
 #include "user_form.h"
 
+#include "../../model/enum/dept_enum.h"
+
 static GtkWidget *component();
 static GtkWidget *footer();
 
@@ -47,7 +49,14 @@ static GtkWidget *component(void) {
     }
 
     gtk_grid_attach(GTK_GRID(grid), gtk_label_new("Department *"), 0, 6, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), gtk_drop_down_new_from_strings((const char *[]){ "--None Selected--", "Accounting", "Sales", "Plant", "Shipping", "Quality Control", NULL}), 1, 6, 2, 1);
+
+    GtkStringList *departments = gtk_string_list_new(NULL);
+    for (size_t i = 0; i < DEPT_COMBO_LIST_COUNT; i++)
+        gtk_string_list_append(departments, dept_to_string(DEPT_COMBO_LIST[i]));
+
+    GtkWidget *dropdown = gtk_drop_down_new(NULL, NULL);
+    gtk_drop_down_set_model(GTK_DROP_DOWN(dropdown), G_LIST_MODEL(departments));
+    gtk_grid_attach(GTK_GRID(grid), dropdown, 1, 6, 2, 1);
 
     return grid;
 }

@@ -10,6 +10,10 @@ pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4>=4.14)
 
 add_executable(employeeadmin main.c
         application.c
+        model/enum/dept_enum.c
+        model/enum/role_enum.c
+        model/vo/user_vo.c
+        model/vo/role_vo.c
         view/components/user_list.c
         view/components/user_form.c
         view/components/user_role.c

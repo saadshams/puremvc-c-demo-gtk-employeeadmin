@@ -1,5 +1,7 @@
 #include "user_role.h"
 
+#include "../../model/enum/role_enum.h"
+
 static GtkWidget *component();
 static GtkWidget *footer();
 
@@ -30,7 +32,7 @@ static GtkWidget *component() {
     GtkWidget *list = gtk_list_box_new();
     gtk_widget_set_vexpand(list, TRUE);
 
-    const char *roles[] = { "Admin", "Role", "User", "Manager", "Guest" };
+    const char *roles[] = { "Admin" };
     const int count = sizeof(roles) / sizeof(roles[0]);
 
     for(int i=0; i<count; i++) {
@@ -47,7 +49,13 @@ static GtkWidget *footer() {
 
     gtk_widget_set_margin_top(box, 5);
 
-    GtkWidget *dropdown = gtk_drop_down_new_from_strings((const char*[]) {"Admin", "Editor", NULL});
+    GtkStringList *roles = gtk_string_list_new(NULL);
+    for (size_t i = 0; i < ROLE_COMBO_LIST_COUNT; i++)
+        gtk_string_list_append(roles, role_to_string(ROLE_COMBO_LIST[i]));
+
+    GtkWidget *dropdown = gtk_drop_down_new(NULL, NULL);
+    gtk_drop_down_set_model(GTK_DROP_DOWN(dropdown), G_LIST_MODEL(roles));
+
     gtk_widget_set_hexpand(dropdown, TRUE);
     gtk_widget_set_halign(dropdown, GTK_ALIGN_FILL);
 
