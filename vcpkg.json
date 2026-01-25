@@ -4,6 +4,6 @@
   "maintainers": ["Saad Shams <saad.shams@puremvc.org>"],
   "description": "PureMVC C Demo: Employee Admin",
   "dependencies": [
-    "puremvc"
+    "gtk"
   ]
 }

@@ -4,24 +4,17 @@ project(employeeadmin C)
 set(CMAKE_C_STANDARD 11)
 
 # 2️⃣ Find dependencies
-find_package(puremvc REQUIRED CONFIG)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4>=4.14)
+#find_package(puremvc REQUIRED CONFIG)
 
-add_executable(employeeadmin main.c)
+add_executable(employeeadmin main.c
+        application.c
+        view/components/user_list.c
+        view/components/user_form.c
+        view/components/user_role.c
+        view/components/user_role.h)
 
-# 4️⃣ Target properties
-target_include_directories(employeeadmin
-        PUBLIC
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-            $<INSTALL_INTERFACE:include>)
-target_link_libraries(puremvc-c-demo-gtk-employeeadmin PUBLIC puremvc::puremvc)
+target_link_libraries(employeeadmin PRIVATE PkgConfig::GTK4)
+#target_link_libraries(employeeadmin PUBLIC puremvc::puremvc)
 
-# 5️⃣ Install rules
-include(GNUInstallDirs)
-
-install(TARGETS employeeadmin
-        EXPORT employeeadmin-config
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT EmployeeAdminRunTime
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT EmployeeAdminRunTime NAMELINK_COMPONENT EmployeeAdminDevelopment
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT EmployeeAdminDevelopment)
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
