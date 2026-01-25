@@ -12,7 +12,6 @@ GtkWidget *user_form() {
     }
 
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
-    gtk_widget_add_css_class(box, "panel");
 
     gtk_widget_set_margin_top(box, 15);
     gtk_widget_set_margin_end(box, 15);
@@ -62,8 +61,11 @@ static GtkWidget *footer() {
     gtk_widget_set_hexpand(spacer, TRUE);
 
     GtkWidget *update = gtk_button_new_with_label("Update Profile");
+    gtk_widget_add_css_class(update, "suggested-action");
+
     GtkWidget *cancel = gtk_button_new_with_label("Cancel");
     gtk_widget_set_margin_start(cancel, 5);
+    gtk_widget_add_css_class(cancel, "destructive-action");
 
     gtk_box_append(GTK_BOX(box), spacer);
     gtk_box_append(GTK_BOX(box), update);

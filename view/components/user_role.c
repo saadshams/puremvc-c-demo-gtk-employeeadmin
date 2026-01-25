@@ -12,7 +12,6 @@ GtkWidget *user_role() {
     }
 
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
-    gtk_widget_add_css_class(box, "panel");
 
     gtk_widget_set_margin_top(box, 15);
     gtk_widget_set_margin_end(box, 15);
