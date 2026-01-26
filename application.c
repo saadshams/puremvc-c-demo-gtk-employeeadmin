@@ -8,7 +8,7 @@ static GtkWidget *layout();
 static GtkWidget *master();
 static GtkWidget *detail();
 
-GtkApplication *startup(void) {
+GtkApplication *getApp(void) {
     GtkApplication *app = gtk_application_new("org.puremvc.employeeadmin", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
     return app;

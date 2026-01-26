@@ -2,4 +2,4 @@
 
 #include <gtk/gtk.h>
 
-GtkApplication *startup(void);
+GtkApplication *getApp(void);
