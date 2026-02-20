@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 
-#include "../enum/dept_enum.h"
+#include "model/enum/dept_enum.h"
 
 struct UserVO {
     const char *username;

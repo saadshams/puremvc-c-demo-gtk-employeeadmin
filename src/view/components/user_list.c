@@ -1,32 +1,38 @@
 #include "user_list.h"
 
-static GtkWidget *component();
+static GtkWidget *header();
+static GtkWidget *body();
 static GtkWidget *footer();
 
-GtkWidget *user_list() {
-    GtkWidget *frame = gtk_frame_new("Users");
-    GtkWidget *label = gtk_frame_get_label_widget(GTK_FRAME(frame));
-    if (label) {
-        gtk_widget_add_css_class(label, "title-4");
-        gtk_widget_set_halign(label, GTK_ALIGN_START);
-    }
+GtkWidget *user_list_init() {
+    GtkWidget *frame = gtk_frame_new(NULL);
 
-    GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+    gtk_frame_set_label_widget(GTK_FRAME(frame), header()); // Header
 
-    gtk_widget_set_margin_top(box, 15);
-    gtk_widget_set_margin_end(box, 15);
-    gtk_widget_set_margin_bottom(box, 10);
-    gtk_widget_set_margin_start(box, 15);
+    GtkWidget *content_area = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6); // Layout Container
 
-    gtk_box_append(GTK_BOX(box), component());
-    gtk_box_append(GTK_BOX(box), footer());
+    gtk_widget_set_margin_start(content_area, 15);
+    gtk_widget_set_margin_end(content_area, 15);
+    gtk_widget_set_margin_top(content_area, 15);
+    gtk_widget_set_margin_bottom(content_area, 10);
 
-    gtk_frame_set_child(GTK_FRAME(frame), box);
+    gtk_box_append(GTK_BOX(content_area), body()); // Assembly
+    gtk_box_append(GTK_BOX(content_area), footer());
+
+    gtk_frame_set_child(GTK_FRAME(frame), content_area);
 
     return frame;
 }
 
-static GtkWidget *component() {
+static GtkWidget *header() {
+    GtkWidget *label = gtk_label_new("Users");
+    gtk_widget_add_css_class(label, "title-4");
+    gtk_widget_set_halign(label, GTK_ALIGN_START);
+    // Wrap in a box if you need specific padding/margins for the title
+    return label;
+}
+
+static GtkWidget *body() {
     GtkWidget *scroller = gtk_scrolled_window_new();
     gtk_widget_set_vexpand(scroller, TRUE);
     gtk_widget_set_hexpand(scroller, TRUE);

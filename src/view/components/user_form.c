@@ -1,34 +1,38 @@
 #include "user_form.h"
 
-#include "../../model/enum/dept_enum.h"
+#include "model/enum/dept_enum.h"
 
-static GtkWidget *component();
+static GtkWidget *header();
+static GtkWidget *body();
 static GtkWidget *footer();
 
-GtkWidget *user_form() {
-    GtkWidget *frame = gtk_frame_new("User Profile");
-    GtkWidget *label = gtk_frame_get_label_widget(GTK_FRAME(frame));
-    if (label) {
-        gtk_widget_add_css_class(label, "title-4");
-        gtk_widget_set_halign(label, GTK_ALIGN_START);
-    }
+GtkWidget *user_form_init() {
+    GtkWidget *frame = gtk_frame_new(NULL);
 
-    GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+    gtk_frame_set_label_widget(GTK_FRAME(frame), header()); // Set Header
 
-    gtk_widget_set_margin_top(box, 15);
-    gtk_widget_set_margin_end(box, 15);
-    gtk_widget_set_margin_bottom(box, 10);
-    gtk_widget_set_margin_start(box, 15);
+    GtkWidget *content_area = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6); // Layout Container
+    gtk_widget_set_margin_start(content_area, 15);
+    gtk_widget_set_margin_end(content_area, 15);
+    gtk_widget_set_margin_top(content_area, 15);
+    gtk_widget_set_margin_bottom(content_area, 10);
 
-    gtk_box_append(GTK_BOX(box), component());
-    gtk_box_append(GTK_BOX(box), footer());
+    gtk_box_append(GTK_BOX(content_area), body()); // Assembly
+    gtk_box_append(GTK_BOX(content_area), footer());
 
-    gtk_frame_set_child(GTK_FRAME(frame), box);
+    gtk_frame_set_child(GTK_FRAME(frame), content_area);
 
     return frame;
 }
 
-static GtkWidget *component(void) {
+static GtkWidget *header() {
+    GtkWidget *label = gtk_label_new("User Profile");
+    gtk_widget_add_css_class(label, "title-4");
+    gtk_widget_set_halign(label, GTK_ALIGN_START);
+    return label;
+}
+
+static GtkWidget *body(void) {
     GtkWidget *grid = gtk_grid_new();
     gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
     gtk_grid_set_column_spacing(GTK_GRID(grid), 12);

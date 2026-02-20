@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 
-#include "../enum/role_enum.h"
+#include "model/enum/role_enum.h"
 
 #define MAX_ROLES 16
 
