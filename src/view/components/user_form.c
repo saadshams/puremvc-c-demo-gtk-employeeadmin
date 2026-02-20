@@ -5,13 +5,13 @@
 
 struct IUserForm delegate;
 
-static GtkWidget *header();
-static GtkWidget *body();
-static GtkWidget *footer();
-
 void user_form_set_delegate(struct IUserForm _delegate) {
     delegate = _delegate;
 }
+
+static GtkWidget *header();
+static GtkWidget *body();
+static GtkWidget *footer();
 
 GtkWidget *user_form_init() {
     GtkWidget *frame = gtk_frame_new(NULL);

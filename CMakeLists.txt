@@ -45,7 +45,7 @@ target_include_directories(core
 add_executable(employeeadmin src/main.c)
 target_link_libraries(employeeadmin PRIVATE core)
 
-option(EMPLOYEE_ADMIN_BUILD_TESTS "Build Employee Admin Tests" ${PROJECT_IS_TOP_LEVEL})
+option(EMPLOYEE_ADMIN_BUILD_TESTS "Build EmployeeAdmin Tests" ${PROJECT_IS_TOP_LEVEL})
 if (EMPLOYEE_ADMIN_BUILD_TESTS)
     enable_testing()
     add_subdirectory(test)

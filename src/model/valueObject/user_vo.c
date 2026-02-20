@@ -2,27 +2,30 @@
 
 #include "user_vo.h"
 
-void user_vo_init(struct UserVO *user_vo, const char *username, const char *first_name, const char *last_name, const char *email, const char *password, const enum DeptEnum department) {
-    if (user_vo == NULL) return;
-    user_vo->username = username != NULL ? username : "";
-    user_vo->first_name = first_name != NULL ? first_name : "";
-    user_vo->last_name = last_name != NULL ? last_name : "";
-    user_vo->email = email != NULL ? email : "";
-    user_vo->password = password != NULL ? password : "";
-    user_vo->department = department;
+static bool isValid(const struct UserVO *self, const char *password) {
+    if (self == NULL) return false;
+    return self->username != NULL && self->password != password && self->department != NONE_SELECTED;
 }
 
-bool user_vo_is_valid(const struct UserVO *user_vo, const char *password) {
-    if (user_vo == NULL) return false;
-    return user_vo->username != NULL && user_vo->password != password && user_vo->department != NONE_SELECTED;
-}
+static const char *givenName(const struct UserVO *self, char *buffer, size_t buffer_size) {
+    if (self == NULL || buffer == NULL || buffer_size == 0) return NULL;
 
-const char *user_vo_get_given_name(const struct UserVO *user_vo, char *buffer, size_t buffer_size) {
-    if (user_vo == NULL || buffer == NULL || buffer_size == 0) return NULL;
-
-    snprintf(buffer, buffer_size, "%s, %s", user_vo->last_name, user_vo->first_name);
+    snprintf(buffer, buffer_size, "%s, %s", self->last, self->first);
     return buffer;
 }
+
+void user_vo_init(struct UserVO *self, const char *username, const char *first, const char *last, const char *email, const char *password, const enum DeptEnum department) {
+    self->username = username != NULL ? username : "";
+    self->first = first != NULL ? first : "";
+    self->last = last != NULL ? last : "";
+    self->email = email != NULL ? email : "";
+    self->password = password != NULL ? password : "";
+    self->department = department;
+
+    self->isValid = isValid;
+    self->givenName = givenName;
+}
+
 
 /*
 *    struct UserVO user;

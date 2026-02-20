@@ -12,4 +12,4 @@ struct RoleVO {
     size_t count; // number of roles stored
 };
 
-void role_vo_init(struct RoleVO *role_vo, const char *username, const enum RoleEnum *roles, size_t count);
+void role_vo_init(struct RoleVO *self, const char *username, const enum RoleEnum *roles, size_t count);
