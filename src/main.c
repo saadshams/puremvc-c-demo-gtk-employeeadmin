@@ -53,12 +53,11 @@ int main(const int argc, char **argv) {
     };
     struct IFacade *super = application_facade_getInstance(facadeMap, name);
     super->initializeFacade(super, model, view, controller); // Compose Facade with Model, View, Controller
-    const struct ApplicationFacade *facade = application_facade_bind(&(struct ApplicationFacade){}, super);
+    struct ApplicationFacade *facade = application_facade_bind(&(struct ApplicationFacade){}, super);
 
-    struct Stage stage = {};
-    facade->startup(facade, &stage);
+    facade->startup(facade);
 
-    GtkApplication *app = getApp(&stage);
+    GtkApplication *app = getApp(facade);
 
     const int status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);

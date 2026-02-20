@@ -1,8 +1,16 @@
 #include "user_list.h"
 
+#include "employee_admin/i_user_list.h"
+
+struct IUserList delegate;
+
 static GtkWidget *header();
 static GtkWidget *body();
 static GtkWidget *footer();
+
+void user_list_set_delegate(struct IUserList _delegate) {
+    delegate = _delegate;
+}
 
 GtkWidget *user_list_init() {
     GtkWidget *frame = gtk_frame_new(NULL);

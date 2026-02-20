@@ -1,16 +1,18 @@
 #include "application.h"
 
+#include "application_facade.h"
 #include "view/components/user_form.h"
+#include "view/components/user_list.h"
 #include "view/components/user_role.h"
 
 static void activate(GtkApplication *app, gpointer data);
-static GtkWidget *layout(struct Stage *component);
-static GtkWidget *master(struct Stage *stage);
-static GtkWidget *detail(struct Stage *component);
+static GtkWidget *layout(gpointer data);
+static GtkWidget *master(gpointer data);
+static GtkWidget *detail(gpointer data);
 
-GtkApplication *getApp(struct Stage *stage) {
+GtkApplication *getApp(gpointer data) {
     GtkApplication *app = gtk_application_new("org.puremvc.employeeadmin", G_APPLICATION_DEFAULT_FLAGS);
-    g_signal_connect(app, "activate", G_CALLBACK(activate), stage);
+    g_signal_connect(app, "activate", G_CALLBACK(activate), data);
     return app;
 }
 
@@ -24,7 +26,7 @@ static void activate(GtkApplication *app, gpointer data) {
     gtk_window_present(GTK_WINDOW(window));
 }
 
-static GtkWidget *layout(struct Stage *component) {
+static GtkWidget *layout(gpointer data) {
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 12);
 
     gtk_widget_set_margin_top(box, 20);
@@ -32,8 +34,8 @@ static GtkWidget *layout(struct Stage *component) {
     gtk_widget_set_margin_bottom(box, 20);
     gtk_widget_set_margin_start(box, 20);
 
-    GtkWidget *master_widget = master(component);
-    GtkWidget *detail_widget = detail(component);
+    GtkWidget *master_widget = master(data);
+    GtkWidget *detail_widget = detail(data);
 
     gtk_widget_set_vexpand(master_widget, TRUE);
     gtk_widget_set_vexpand(detail_widget, FALSE);
@@ -43,23 +45,30 @@ static GtkWidget *layout(struct Stage *component) {
     return box;
 }
 
-static GtkWidget *master(struct Stage *stage) {
-    stage->list.widget = user_list_init();
-    return stage->list.widget;
+static GtkWidget *master(gpointer data) {
+    const struct ApplicationFacade *facade = data;
+    GtkWidget *user = user_list_init();
+    facade->registerComponent(facade, "UserListMediator", user);
+    return user;
 }
 
-static GtkWidget *detail(struct Stage *component) {
+static GtkWidget *detail(gpointer data) {
+    const struct ApplicationFacade *facade = data;
+
     GtkWidget *grid = gtk_grid_new();
     gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
 
-    component->form.widget = user_form_init();
-    component->role.widget = user_role_init();
+    GtkWidget *form = user_form_init();
+    facade->registerComponent(facade, "UserFormMediator", form);
 
-    gtk_widget_set_hexpand(component->form.widget, TRUE);
-    gtk_widget_set_hexpand(component->role.widget, TRUE);
+    GtkWidget *role = user_role_init();
+    facade->registerComponent(facade, "UserRoleMediator", role);
 
-    gtk_grid_attach(GTK_GRID(grid), component->form.widget, 0, 0, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), component->role.widget, 1, 0, 1, 1);
+    gtk_widget_set_hexpand(form, TRUE);
+    gtk_widget_set_hexpand(role, TRUE);
+
+    gtk_grid_attach(GTK_GRID(grid), form, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), role, 1, 0, 1, 1);
 
     gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
 

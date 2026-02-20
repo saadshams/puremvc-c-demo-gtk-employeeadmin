@@ -1,18 +1,22 @@
 #include "startup_command.h"
 
-#include "application.h"
-#include "application_facade.h"
+#include "model/user_proxy.h"
+#include "model/role_proxy.h"
 #include "view/user_list_mediator.h"
 #include "view/user_form_mediator.h"
 #include "view/user_role_mediator.h"
 
+#include <puremvc/puremvc.h>
+
 static void execute(const struct ICommand *self, struct INotification *notification) {
     const struct IFacade *facade = self->getNotifier(self)->getFacade(self->getNotifier(self));
-    struct Stage *stage = notification->getBody(notification);
 
-    facade->registerMediator(facade, user_list_mediator_init, UserListMediator_NAME, &stage->list);
-    facade->registerMediator(facade, user_form_mediator_init, UserFormMediator_NAME, &stage->form);
-    facade->registerMediator(facade, user_role_mediator_init, UserRoleMediator_NAME, &stage->role);
+    facade->registerProxy(facade, user_proxy_init, UserProxy_NAME, NULL);
+    facade->registerProxy(facade, role_proxy_init, RoleProxy_NAME, NULL);
+
+    facade->registerMediator(facade, user_list_mediator_init, UserListMediator_NAME, NULL);
+    facade->registerMediator(facade, user_form_mediator_init, UserFormMediator_NAME, NULL);
+    facade->registerMediator(facade, user_role_mediator_init, UserRoleMediator_NAME, NULL);
 }
 
 struct ICommand *startup_command_init(void *buffer) {

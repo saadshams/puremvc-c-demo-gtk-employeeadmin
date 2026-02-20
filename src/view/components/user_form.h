@@ -4,11 +4,6 @@
 
 #include "gtk/gtk.h"
 
-struct UserForm {
-    GtkWidget *widget;
-
-    struct IUserForm delegate;
-    void (*setDelegate)(struct UserForm *self, struct IUserForm delegate);
-};
-
 GtkWidget *user_form_init();
+
+void user_form_set_delegate(struct IUserForm _delegate);

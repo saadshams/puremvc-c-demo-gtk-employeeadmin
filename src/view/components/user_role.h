@@ -4,11 +4,6 @@
 
 #include <gtk/gtk.h>
 
-struct UserRole {
-    GtkWidget *widget;
-
-    struct IUserRole delegate;
-    void (*setDelegate)(struct UserRole *self, struct IUserRole delegate);
-};
-
 GtkWidget *user_role_init();
+
+void user_role_set_delegate(struct IUserRole _delegate);

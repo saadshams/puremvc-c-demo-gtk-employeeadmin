@@ -4,11 +4,6 @@
 
 #include "gtk/gtk.h"
 
-struct UserList {
-    GtkWidget *widget;
-
-    struct IUserList delegate;
-    void (*setDelegate)(struct UserList *self, struct IUserList delegate);
-};
-
 GtkWidget *user_list_init();
+
+void user_list_set_delegate(struct IUserList _delegate);

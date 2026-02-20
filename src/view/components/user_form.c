@@ -1,10 +1,17 @@
 #include "user_form.h"
 
+#include "employee_admin/i_user_form.h"
 #include "model/enum/dept_enum.h"
+
+struct IUserForm delegate;
 
 static GtkWidget *header();
 static GtkWidget *body();
 static GtkWidget *footer();
+
+void user_form_set_delegate(struct IUserForm _delegate) {
+    delegate = _delegate;
+}
 
 GtkWidget *user_form_init() {
     GtkWidget *frame = gtk_frame_new(NULL);

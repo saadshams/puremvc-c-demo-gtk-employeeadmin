@@ -1,7 +1,5 @@
 #pragma once
 
-#include "application.h"
-
 #include <puremvc/puremvc.h>
 
 #define VERSION "EmployeeAdmin Version 1.0.0"
@@ -13,7 +11,8 @@
 struct ApplicationFacade {
     struct IFacade *super;
 
-    void (*startup)(const struct ApplicationFacade *self, struct Stage *stage);
+    void (*registerComponent)(const struct ApplicationFacade *self, const char *mediatorName, void *component);
+    void (*startup)(const struct ApplicationFacade *self);
 };
 
 struct IFacade *application_facade_getInstance(struct FacadeMap **facadeMap, const char *key);

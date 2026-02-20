@@ -2,9 +2,15 @@
 
 #include "model/enum/role_enum.h"
 
+struct IUserRole delegate;
+
 static GtkWidget *header();
 static GtkWidget *body();
 static GtkWidget *footer();
+
+void user_role_set_delegate(struct IUserRole _delegate) {
+    delegate = _delegate;
+}
 
 GtkWidget *user_role_init() {
     GtkWidget *frame = gtk_frame_new(NULL);

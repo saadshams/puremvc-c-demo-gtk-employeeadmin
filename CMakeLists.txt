@@ -15,6 +15,8 @@ add_library(core
         src/application.c
         src/application_facade.c
         src/controller/startup_command.c
+        src/model/user_proxy.c
+        src/model/role_proxy.c
         src/model/enum/dept_enum.c
         src/model/enum/role_enum.c
         src/model/valueObject/user_vo.c
