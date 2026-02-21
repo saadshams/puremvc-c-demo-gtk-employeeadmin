@@ -12,7 +12,7 @@ struct ApplicationFacade {
     struct IFacade *super;
 
     void (*registerComponent)(const struct ApplicationFacade *self, const char *mediatorName, void *component);
-    void (*startup)(const struct ApplicationFacade *self);
+    void (*startup)(const struct ApplicationFacade *self, void *body);
 };
 
 struct IFacade *application_facade_getInstance(struct FacadeMap **facadeMap, const char *key);

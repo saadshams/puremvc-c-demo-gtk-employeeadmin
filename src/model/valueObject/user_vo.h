@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#define MAX_USERS 64
+
 struct UserVO {
     const char *username;
     const char *first;

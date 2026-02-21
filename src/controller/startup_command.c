@@ -11,8 +11,9 @@
 static void execute(const struct ICommand *self, struct INotification *notification) {
     const struct IFacade *facade = self->getNotifier(self)->getFacade(self->getNotifier(self));
 
-    facade->registerProxy(facade, user_proxy_init, UserProxy_NAME, NULL);
-    facade->registerProxy(facade, role_proxy_init, RoleProxy_NAME, NULL);
+    void **body = notification->getBody(notification);
+    facade->registerProxy(facade, user_proxy_init, UserProxy_NAME, body[0]);
+    facade->registerProxy(facade, role_proxy_init, RoleProxy_NAME, body[1]);
 
     facade->registerMediator(facade, user_list_mediator_init, UserListMediator_NAME, NULL);
     facade->registerMediator(facade, user_form_mediator_init, UserFormMediator_NAME, NULL);

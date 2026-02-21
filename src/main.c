@@ -1,5 +1,7 @@
 #include "application.h"
 #include "application_facade.h"
+#include "model/valueObject/user_vo.h"
+#include "model/valueObject/role_vo.h"
 
 #include <puremvc/puremvc.h>
 #include <gtk/gtk.h>
@@ -47,7 +49,7 @@ int main(const int argc, char **argv) {
     struct IController *controller = puremvc_controller_getInstance(controllerMap, name);
     controller->initializeController(controller, view, commandMap); // Compose Controller with View and Commands
 
-    struct FacadeMap **facadeMap = (struct FacadeMap *[]){
+    struct FacadeMap **facadeMap = (struct FacadeMap *[]) {
         &(struct FacadeMap){ .facade = alloca(puremvc_facade_size()) }, // Facade instance (Multiton Key)
         NULL
     };
@@ -55,10 +57,11 @@ int main(const int argc, char **argv) {
     super->initializeFacade(super, model, view, controller); // Compose Facade with Model, View, Controller
     struct ApplicationFacade *facade = application_facade_bind(&(struct ApplicationFacade){}, super);
 
-    facade->startup(facade);
+    struct UserVO users[MAX_USERS] = {0};
+    struct RoleVO roles[MAX_USERS] = {0};
+    facade->startup(facade, (void *[]) { &users, &roles, NULL });
 
     GtkApplication *app = getApp(facade);
-
     const int status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);
 

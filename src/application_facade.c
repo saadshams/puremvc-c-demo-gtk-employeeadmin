@@ -30,9 +30,9 @@ static void registerComponent(const struct ApplicationFacade *self, const char *
     }
 }
 
-static void startup(const struct ApplicationFacade *self) {
+static void startup(const struct ApplicationFacade *self, void *body) {
     const struct IFacade *facade = self->super;
-    facade->sendNotification(facade, STARTUP, NULL, NULL);
+    facade->sendNotification(facade, STARTUP, body, NULL);
 }
 
 struct IFacade *application_facade_getInstance(struct FacadeMap **facadeMap, const char *key) {

@@ -5,7 +5,6 @@
 #include <puremvc/puremvc.h>
 
 #define UserProxy_NAME "UserProxy"
-#define MAX_USERS 64
 
 struct UserProxy {
     struct IProxy *super;
