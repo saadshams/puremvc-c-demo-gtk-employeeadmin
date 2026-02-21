@@ -2,5 +2,5 @@
 
 struct IUserList {
     void *context;
-    void (*callback)(void *context, void *data);
+    void (*getUsers)(void *context);
 };

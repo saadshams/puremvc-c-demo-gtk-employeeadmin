@@ -1,9 +1,9 @@
 #pragma once
 
+#include "model/enum/dept_enum.h"
+
 #include <stdbool.h>
 #include <stddef.h>
-
-#include "model/enum/dept_enum.h"
 
 struct UserVO {
     const char *username;

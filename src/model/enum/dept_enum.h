@@ -1,12 +1,12 @@
 #pragma once
 
 enum DeptEnum {
-    NONE_SELECTED = -1,
-    ACCT = 0,
-    SALES = 1,
-    PLANT = 2,
-    SHIPPING = 3,
-    QC = 4
+    DEPT_NONE_SELECTED = 0,
+    DEPT_ACCT = 1,
+    DEPT_SALES = 2,
+    DEPT_PLANT = 3,
+    DEPT_SHIPPING = 4,
+    DEPT_QC = 5
 };
 
 const char *dept_to_string(enum DeptEnum dept);

@@ -2,10 +2,19 @@
 
 #include "employee_admin/i_user_list.h"
 
-struct IUserList delegate;
+static struct IUserList delegate;
+
+static GtkWidget *column_view; // Glue to the view
+static GListStore *user_store;
 
 void user_list_set_delegate(struct IUserList _delegate) {
     delegate = _delegate;
+}
+
+void user_list_start() {
+    if (delegate.getUsers) {
+        delegate.getUsers(delegate.context);
+    }
 }
 
 static GtkWidget *header();
@@ -36,7 +45,6 @@ static GtkWidget *header() {
     GtkWidget *label = gtk_label_new("Users");
     gtk_widget_add_css_class(label, "title-4");
     gtk_widget_set_halign(label, GTK_ALIGN_START);
-    // Wrap in a box if you need specific padding/margins for the title
     return label;
 }
 
@@ -45,10 +53,10 @@ static GtkWidget *body() {
     gtk_widget_set_vexpand(scroller, TRUE);
     gtk_widget_set_hexpand(scroller, TRUE);
 
-    GtkWidget *column_view = gtk_column_view_new(NULL);
+    column_view = gtk_column_view_new(NULL);
 
     const char *titles[] = { "Username", "First Name", "Last Name", "Email", "Department"};
-    int count = sizeof(titles) / sizeof(titles[0]);
+    const int count = sizeof(titles) / sizeof(titles[0]);
 
     for(int i=0; i<count; i++) {
         GtkColumnViewColumn *column = gtk_column_view_column_new(titles[i], gtk_signal_list_item_factory_new());

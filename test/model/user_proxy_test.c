@@ -49,15 +49,15 @@ void testCount(void) {
 
     if (proxy->count(proxy) != 0) abort();
 
-    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = ACCT };
+    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT };
     if (proxy->add(proxy, &larry) == false) abort();
     if (proxy->count(proxy) != 1) abort();
 
-    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = SALES };
+    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = DEPT_SALES };
     if (proxy->add(proxy, &curly) == false) abort();
     if (proxy->count(proxy) != 2) abort();
 
-    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = PLANT };
+    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = DEPT_PLANT };
     if (proxy->add(proxy, &moe) == false) abort();
     if (proxy->count(proxy) != 3) abort();
 
@@ -70,11 +70,11 @@ void testIndexOf(void) {
     struct IProxy *super = user_proxy_init(alloca(puremvc_proxy_size()), "UserProxyTest", &users);
     const struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
 
-    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = ACCT };
+    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT };
     if (proxy->add(proxy, &larry) == false) abort();
-    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = SALES };
+    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = DEPT_SALES };
     if (proxy->add(proxy, &curly) == false) abort();
-    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = PLANT };
+    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = DEPT_PLANT };
     if (proxy->add(proxy, &moe) == false) abort();
 
     size_t index = 0;
@@ -94,7 +94,7 @@ void testIndexOf(void) {
     if (proxy->indexOf(proxy, "sshemp", &index) != false) abort(); // non-existing
     if (index != 2) abort(); // index remains the same from last result
 
-    const struct UserVO shemp = { .username = "sshemp", .first = "Shemp", .last = "Stooge", .email = "shemp@stooges.com", .password = "xyz987", .department = PLANT };
+    const struct UserVO shemp = { .username = "sshemp", .first = "Shemp", .last = "Stooge", .email = "shemp@stooges.com", .password = "xyz987", .department = DEPT_PLANT };
     if (proxy->add(proxy, &shemp) == false) abort();
 
     if (proxy->indexOf(proxy, "sshemp", &index) != true) abort();
@@ -106,11 +106,11 @@ void testList(void) {
     struct IProxy *super = user_proxy_init(alloca(puremvc_proxy_size()), "UserProxyTest", &users);
     const struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
 
-    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = ACCT };
+    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT };
     if (proxy->add(proxy, &larry) == false) abort();
-    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = SALES };
+    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = DEPT_SALES };
     if (proxy->add(proxy, &curly) == false) abort();
-    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = PLANT };
+    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = DEPT_PLANT };
     if (proxy->add(proxy, &moe) == false) abort();
 
     struct UserVO *temp[3] = {0};
@@ -132,15 +132,15 @@ void testAdd(void) {
     struct IProxy *super = user_proxy_init(alloca(puremvc_proxy_size()), "UserProxyTest", &users);
     const struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
 
-    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = ACCT };
+    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT };
     if (proxy->add(proxy, &larry) == false) abort();
-    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = SALES };
+    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = DEPT_SALES };
     if (proxy->add(proxy, &curly) == false) abort();
 
     if (proxy->add(proxy, &larry) == true) abort();
     if (proxy->add(proxy, &curly) == true) abort();
 
-    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = PLANT };
+    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = DEPT_PLANT };
     if (proxy->add(proxy, &moe) == false) abort();
     if (proxy->add(proxy, &moe) == true) abort();
 }
@@ -150,14 +150,14 @@ void testUpdate(void) {
     struct IProxy *super = user_proxy_init(alloca(puremvc_proxy_size()), "UserProxyTest", &users);
     const struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
 
-    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = ACCT };
+    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT };
     if (proxy->add(proxy, &larry) == false) abort();
-    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = SALES };
+    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = DEPT_SALES };
     if (proxy->add(proxy, &curly) == false) abort();
-    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = PLANT };
+    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = DEPT_PLANT };
     if (proxy->add(proxy, &moe) == false) abort();
 
-    const struct UserVO updated = { .username = "mstooge", .first = "Moe1", .last = "Stooge1", .email = "moe@stooges.com", .password = "abc123", .department = PLANT };
+    const struct UserVO updated = { .username = "mstooge", .first = "Moe1", .last = "Stooge1", .email = "moe@stooges.com", .password = "abc123", .department = DEPT_PLANT };
     if (proxy->update(proxy, &updated) == false) abort();
 
     if (strcmp(users[2].first, "Moe1") != 0) abort();
@@ -169,13 +169,13 @@ void testDelete(void) {
     struct IProxy *super = user_proxy_init(alloca(puremvc_proxy_size()), "UserProxyTest", &users);
     const struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
 
-    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = ACCT };
+    const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT };
     if (proxy->add(proxy, &larry) == false) abort();
-    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = SALES };
+    const struct UserVO curly = { .username = "cstooge", .first = "Curly", .last = "Stooge", .email = "curly@stooges.com", .password = "xyz987", .department = DEPT_SALES };
     if (proxy->add(proxy, &curly) == false) abort();
-    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = PLANT };
+    const struct UserVO moe = { .username = "mstooge", .first = "Moe", .last = "Stooge", .email = "moe@stooges.com", .password = "abc123", .department = DEPT_PLANT };
     if (proxy->add(proxy, &moe) == false) abort();
-    const struct UserVO shemp = { .username = "sshemp", .first = "Shemp", .last = "Stooge", .email = "shemp@stooges.com", .password = "xyz987", .department = PLANT };
+    const struct UserVO shemp = { .username = "sshemp", .first = "Shemp", .last = "Stooge", .email = "shemp@stooges.com", .password = "xyz987", .department = DEPT_PLANT };
     if (proxy->add(proxy, &shemp) == false) abort();
 
     struct UserVO temp = {};

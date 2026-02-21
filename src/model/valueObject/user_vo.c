@@ -4,7 +4,7 @@
 
 static bool isValid(const struct UserVO *self, const char *password) {
     if (self == NULL) return false;
-    return self->username != NULL && self->password != password && self->department != NONE_SELECTED;
+    return self->username != NULL && self->password != password && self->department != DEPT_NONE_SELECTED;
 }
 
 static const char *givenName(const struct UserVO *self, char *buffer, size_t buffer_size) {
@@ -25,22 +25,3 @@ void user_vo_init(struct UserVO *self, const char *username, const char *first, 
     self->isValid = isValid;
     self->givenName = givenName;
 }
-
-
-/*
-*    struct UserVO user;
-
-    UserVO_init(&user,
-                "jsmith",
-                "John",
-                "Smith",
-                "jsmith@example.com",
-                "12345",
-                ACCT);
-
-    printf("Is valid? %s\n", UserVO_isValid(&user) ? "Yes" : "No");
-
-    char buf[256];
-    printf("Given name: %s\n", UserVO_getGivenName(&user, buf, sizeof(buf)));
-
- */
