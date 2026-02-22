@@ -1,8 +1,11 @@
 #include "application.h"
 
 #include "application_facade.h"
-#include "view/components/user_form.h"
+#include "view/user_list_mediator.h"
+#include "view/user_form_mediator.h"
+#include "view/user_role_mediator.h"
 #include "view/components/user_list.h"
+#include "view/components/user_form.h"
 #include "view/components/user_role.h"
 
 static void activate(GtkApplication *app, gpointer data);
@@ -48,7 +51,7 @@ static GtkWidget *layout(gpointer data) {
 static GtkWidget *master(gpointer data) {
     const struct ApplicationFacade *facade = data;
     GtkWidget *user = user_list_init();
-    facade->registerComponent(facade, "UserListMediator", user);
+    facade->registerComponent(facade, UserListMediator_NAME, user);
     return user;
 }
 
@@ -59,10 +62,10 @@ static GtkWidget *detail(gpointer data) {
     gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
 
     GtkWidget *form = user_form_init();
-    facade->registerComponent(facade, "UserFormMediator", form);
+    facade->registerComponent(facade, UserFormMediator_NAME, form);
 
     GtkWidget *role = user_role_init();
-    facade->registerComponent(facade, "UserRoleMediator", role);
+    facade->registerComponent(facade, UserRoleMediator_NAME, role);
 
     gtk_widget_set_hexpand(form, TRUE);
     gtk_widget_set_hexpand(role, TRUE);

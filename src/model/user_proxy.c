@@ -3,8 +3,8 @@
 #include <string.h>
 
 static size_t count(const struct UserProxy *self) {
-    const struct IProxy *this = self->super;
-    const struct UserVO *data = this->getData(this);
+    const struct IProxy *super = self->super;
+    const struct UserVO *data = super->getData(super);
 
     size_t total = 0;
     for (size_t i = 0; i < MAX_USERS; i++) {
@@ -16,8 +16,8 @@ static size_t count(const struct UserProxy *self) {
 }
 
 static bool indexOf(const struct UserProxy *self, const char *username, size_t *out) {
-    const struct IProxy *this = self->super;
-    const struct UserVO *data = this->getData(this);
+    const struct IProxy *super = self->super;
+    const struct UserVO *data = super->getData(super);
 
     const size_t count = self->count(self);
     for (size_t i = 0; i < count; i++) {
@@ -30,8 +30,8 @@ static bool indexOf(const struct UserProxy *self, const char *username, size_t *
 }
 
 static size_t list(const struct UserProxy *self, struct UserVO **out, const size_t max) {
-    const struct IProxy *this = self->super;
-    struct UserVO *data = this->getData(this);
+    const struct IProxy *super = self->super;
+    struct UserVO *data = super->getData(super);
 
     const size_t count = self->count(self);
     const size_t total = count < max ? count : max; // max = caller buffer capacity
@@ -42,8 +42,8 @@ static size_t list(const struct UserProxy *self, struct UserVO **out, const size
 }
 
 static bool add(const struct UserProxy *self, const struct UserVO *user) {
-    const struct IProxy *this = self->super;
-    struct UserVO *data = this->getData(this);
+    const struct IProxy *super = self->super;
+    struct UserVO *data = super->getData(super);
 
     const size_t count = self->count(self);
     if (count >= MAX_USERS) return false; // overflow
@@ -58,8 +58,8 @@ static bool add(const struct UserProxy *self, const struct UserVO *user) {
 }
 
 static bool update(const struct UserProxy *self, const struct UserVO *user) {
-    const struct IProxy *this = self->super;
-    struct UserVO *data = this->getData(this);
+    const struct IProxy *super = self->super;
+    struct UserVO *data = super->getData(super);
 
     size_t index;
     if (self->indexOf(self, user->username, &index) == false) // find
@@ -70,8 +70,8 @@ static bool update(const struct UserProxy *self, const struct UserVO *user) {
 }
 
 static bool delete(const struct UserProxy *self, const struct UserVO *user, struct UserVO *out) {
-    const struct IProxy *this = self->super;
-    struct UserVO *data = this->getData(this);
+    const struct IProxy *super = self->super;
+    struct UserVO *data = super->getData(super);
 
     size_t index;
     if (self->indexOf(self, user->username, &index) == false) // find

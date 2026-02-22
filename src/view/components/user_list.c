@@ -4,16 +4,45 @@
 
 static struct IUserList delegate;
 
-static GtkWidget *column_view; // Glue to the view
-static GListStore *user_store;
+static GtkWidget *column_view;
 
 void user_list_set_delegate(struct IUserList _delegate) {
     delegate = _delegate;
 }
 
-void user_list_start() {
-    if (delegate.getUsers) {
-        delegate.getUsers(delegate.context);
+static void setup_cb(GtkSignalListItemFactory *factory, GtkListItem *list_item, gpointer data) {
+    GtkWidget *label = gtk_label_new(NULL);
+    gtk_widget_set_halign(label, GTK_ALIGN_START);
+    gtk_list_item_set_child(GTK_LIST_ITEM(list_item), label);
+}
+
+static void bind_username_cb(GtkSignalListItemFactory *factory, GtkListItem *list_item, gpointer data) {
+    GtkWidget *label = gtk_list_item_get_child(list_item);
+    const struct UserVO *user = gtk_list_item_get_item(list_item);
+    gtk_label_set_text(GTK_LABEL(label), user->username);
+
+    // GtkSignalListItemFactory *factory = gtk_signal_list_item_factory_new();
+    // g_signal_connect(factory, "setup", G_CALLBACK(setup_cb), NULL);
+    // g_signal_connect(factory, "bind", G_CALLBACK(bind_username_cb), NULL);
+    // GtkColumnViewColumn *column = gtk_column_view_column_new("Username", GTK_LIST_ITEM_FACTORY(factory));
+    // gtk_column_view_append_column(GTK_COLUMN_VIEW(column_view), column);
+}
+
+void user_list_run() {
+    if (delegate.list) {
+        struct UserVO *users[MAX_USERS];
+        const size_t count = delegate.list(delegate.context, users, MAX_USERS);
+
+        GListStore *store = g_list_store_new(G_TYPE_PTR_ARRAY);
+        for (size_t i = 0; i < count; i++) {
+            g_list_store_append(store, &users[i]);
+        }
+
+        GtkSingleSelection *selection = gtk_single_selection_new(G_LIST_MODEL(store));
+        gtk_column_view_set_model(GTK_COLUMN_VIEW(column_view), GTK_SELECTION_MODEL(selection));
+
+        g_object_unref(selection);
+        g_object_unref(store);
     }
 }
 
@@ -45,6 +74,13 @@ static GtkWidget *header() {
     GtkWidget *label = gtk_label_new("Users");
     gtk_widget_add_css_class(label, "title-4");
     gtk_widget_set_halign(label, GTK_ALIGN_START);
+
+    // Add margins directly on the label
+    gtk_widget_set_margin_start(label, 12);
+    gtk_widget_set_margin_end(label, 12);
+    gtk_widget_set_margin_top(label, 12);
+    gtk_widget_set_margin_bottom(label, 0);
+
     return label;
 }
 

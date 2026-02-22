@@ -6,6 +6,6 @@
 
 GtkWidget *user_list_init();
 
-void user_list_start();
+void user_list_run();
 
 void user_list_set_delegate(struct IUserList _delegate);

@@ -1,6 +1,6 @@
-#include <stdio.h>
-
 #include "user_vo.h"
+
+#include <stdio.h>
 
 static bool isValid(const struct UserVO *self, const char *password) {
     if (self == NULL) return false;

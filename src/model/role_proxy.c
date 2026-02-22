@@ -5,8 +5,8 @@
 #include <string.h>
 
 static void addRoleToUser(const struct RoleProxy *self, const struct UserVO *user, const enum RoleEnum role) {
-    const struct IProxy *this = self->super;
-    struct RoleVO **data = this->getData(this);
+    const struct IProxy *super = self->super;
+    struct RoleVO **data = super->getData(super);
 
     for (size_t i = 0; data[i] != NULL; i++) {
         if (strcmp(data[i]->username, user->username) == 0) {
@@ -26,8 +26,8 @@ static void addRoleToUser(const struct RoleProxy *self, const struct UserVO *use
 }
 
 static void removeRoleFromUser(const struct RoleProxy *self, const struct UserVO *user, const enum RoleEnum role) {
-    const struct IProxy *this = self->super;
-    struct RoleVO **data = this->getData(this);
+    const struct IProxy *super = self->super;
+    struct RoleVO **data = super->getData(super);
 
     for (size_t i = 0; data[i] != NULL; i++) {
         if (strcmp(data[i]->username, user->username) == 0) {
