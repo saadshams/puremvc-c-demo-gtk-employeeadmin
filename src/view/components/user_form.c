@@ -36,6 +36,12 @@ static GtkWidget *header() {
     GtkWidget *label = gtk_label_new("User Profile");
     gtk_widget_add_css_class(label, "title-4");
     gtk_widget_set_halign(label, GTK_ALIGN_START);
+
+    gtk_widget_set_margin_start(label, 12);
+    gtk_widget_set_margin_end(label, 0);
+    gtk_widget_set_margin_top(label, 8);
+    gtk_widget_set_margin_bottom(label, 0);
+
     return label;
 }
 
