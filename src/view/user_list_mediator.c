@@ -1,5 +1,4 @@
 #include "user_list_mediator.h"
-
 #include "model/user_proxy.h"
 #include "view/components/user_list.h"
 
@@ -40,7 +39,9 @@ struct IMediator *user_list_mediator_init(void *buffer, const char *name, void *
 
 struct UserListMediator *user_list_mediator_bind(struct UserListMediator *mediator, struct IMediator *super) {
     mediator->super = super;
+
     mediator->list = list;
     mediator->registerComponent = registerComponent;
+
     return mediator;
 }

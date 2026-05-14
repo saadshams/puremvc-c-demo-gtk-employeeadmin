@@ -1,5 +1,4 @@
 #include "user_form_mediator.h"
-
 #include "components/user_form.h"
 
 static const char *const *listNotificationInterests(const struct IMediator *self) {

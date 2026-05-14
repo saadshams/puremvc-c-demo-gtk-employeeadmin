@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20)
 project(employeeadmin C)
 
 set(CMAKE_C_STANDARD 11)
@@ -15,6 +15,7 @@ add_library(core
         src/application.c
         src/application_facade.c
         src/controller/startup_command.c
+        src/controller/register_command.c
         src/model/user_proxy.c
         src/model/role_proxy.c
         src/model/enum/dept_enum.c

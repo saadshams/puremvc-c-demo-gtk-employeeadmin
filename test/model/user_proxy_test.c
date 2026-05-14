@@ -1,5 +1,4 @@
 #include "user_proxy_test.h"
-
 #include "model/user_proxy.h"
 #include "model/valueObject/user_vo.h"
 
@@ -45,7 +44,7 @@ int main(void) {
 void testCount(void) {
     struct UserVO users[MAX_USERS] = {0};
     struct IProxy *super = user_proxy_init(alloca(puremvc_proxy_size()), "UserProxyTest", &users);
-    const struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
+    struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
 
     if (proxy->count(proxy) != 0) abort();
 
@@ -68,7 +67,7 @@ void testCount(void) {
 void testIndexOf(void) {
     struct UserVO users[MAX_USERS] = {0};
     struct IProxy *super = user_proxy_init(alloca(puremvc_proxy_size()), "UserProxyTest", &users);
-    const struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
+    struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
 
     const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT };
     if (proxy->add(proxy, &larry) == false) abort();
@@ -104,7 +103,7 @@ void testIndexOf(void) {
 void testList(void) {
     struct UserVO users[MAX_USERS] = {0};
     struct IProxy *super = user_proxy_init(alloca(puremvc_proxy_size()), "UserProxyTest", &users);
-    const struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
+    struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
 
     const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT };
     if (proxy->add(proxy, &larry) == false) abort();
@@ -130,7 +129,7 @@ void testList(void) {
 void testAdd(void) {
     struct UserVO users[MAX_USERS] = {0};
     struct IProxy *super = user_proxy_init(alloca(puremvc_proxy_size()), "UserProxyTest", &users);
-    const struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
+    struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
 
     const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT };
     if (proxy->add(proxy, &larry) == false) abort();
@@ -148,7 +147,7 @@ void testAdd(void) {
 void testUpdate(void) {
     struct UserVO users[MAX_USERS] = {0};
     struct IProxy *super = user_proxy_init(alloca(puremvc_proxy_size()), "UserProxyTest", &users);
-    const struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
+    struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
 
     const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT };
     if (proxy->add(proxy, &larry) == false) abort();
@@ -167,7 +166,7 @@ void testUpdate(void) {
 void testDelete(void) {
     struct UserVO users[MAX_USERS] = {0};
     struct IProxy *super = user_proxy_init(alloca(puremvc_proxy_size()), "UserProxyTest", &users);
-    const struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
+    struct UserProxy *proxy = user_proxy_bind(&(struct UserProxy){}, super);
 
     const struct UserVO larry = { .username = "lstooge", .first = "Larry", .last = "Stooge", .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT };
     if (proxy->add(proxy, &larry) == false) abort();

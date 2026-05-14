@@ -1,7 +1,6 @@
 #include "role_proxy_test.h"
 #include "model/role_proxy.h"
-
-#import "model/valueObject/role_vo.h"
+#include "model/valueObject/role_vo.h"
 
 #include <stdio.h>
 #include <stdlib.h>

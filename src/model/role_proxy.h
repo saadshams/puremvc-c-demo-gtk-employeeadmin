@@ -1,6 +1,7 @@
 #pragma once
 
 #include "model/valueObject/user_vo.h"
+#include "model/valueObject/role_vo.h"
 #include "model/enum/role_enum.h"
 
 #include <puremvc/puremvc.h>
@@ -10,6 +11,7 @@
 struct RoleProxy {
     struct IProxy *super;
 
+    void (*addItem)(const struct RoleProxy *self, struct RoleVO *role);
     void (*addRoleToUser)(const struct RoleProxy *self, const struct UserVO *user, enum RoleEnum role);
     void (*removeRoleFromUser)(const struct RoleProxy *self, const struct UserVO *user, enum RoleEnum role);
 };

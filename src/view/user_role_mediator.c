@@ -1,5 +1,4 @@
 #include "user_role_mediator.h"
-
 #include "components/user_role.h"
 
 static const char *const *listNotificationInterests(const struct IMediator *self) {

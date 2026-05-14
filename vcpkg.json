@@ -2,7 +2,7 @@
   "name": "puremvc-c-demo-gtk-employeeadmin",
   "version": "1.0.0",
   "maintainers": ["Saad Shams <saad.shams@puremvc.org>"],
-  "description": "PureMVC C Demo: Employee Admin",
+  "description": "PureMVC C Demo: GTK Employee Admin",
   "dependencies": [
     "gtk"
   ]

@@ -3,8 +3,8 @@
 const char *role_to_string(const enum RoleEnum role) {
     switch (role) {
     case ROLE_NONE_SELECTED: return "--None Selected--";
-    case ROLE_ADMIN: return "Administrator";
-    case ROLE_ACCT_PAY: return "Accounts Payable";
+    case ROLE_ADMIN:         return "Administrator";
+    case ROLE_ACCT_PAY:      return "Accounts Payable";
     case ROLE_ACCT_RCV:      return "Accounts Receivable";
     case ROLE_EMP_BENEFITS:  return "Employee Benefits";
     case ROLE_GEN_LEDGER:    return "General Ledger";
@@ -17,7 +17,7 @@ const char *role_to_string(const enum RoleEnum role) {
     case ROLE_CUSTOMERS:     return "Customers";
     case ROLE_SHIPPING:      return "Shipping";
     case ROLE_RETURNS:       return "Returns";
-    default: return "Unknown";
+    default:                 return "Unknown";
     }
 }
 

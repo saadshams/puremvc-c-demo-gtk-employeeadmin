@@ -3,7 +3,7 @@
 #include "model/enum/dept_enum.h"
 
 #include <stdbool.h>
-#include <stddef.h>
+#include <gtk/gtk.h>
 
 #define MAX_USERS 64
 
@@ -18,5 +18,23 @@ struct UserVO {
     bool (*isValid)(const struct UserVO *self, const char *password);
     const char *(*givenName)(const struct UserVO *self, char *buffer, size_t buffer_size);
 };
+
+typedef struct {
+    GObject parent_instance;
+    struct UserVO *user;
+} UserObject;
+
+typedef struct {
+    GObjectClass parent_class;
+} UserObjectClass;
+
+GType user_object_get_type(void);
+UserObject *user_object_new(struct UserVO *user);
+
+static const char *user_vo_get_username(const struct UserVO *self) { return self ? self->username : ""; }
+static const char *user_vo_get_first(const struct UserVO *self) { return self ? self->first : ""; }
+static const char *user_vo_get_last(const struct UserVO *self) { return self ? self->last : ""; }
+static const char *user_vo_get_email(const struct UserVO *self) { return self ? self->email : ""; }
+static const char *user_vo_get_department(const struct UserVO *self) { return self ? dept_to_string(self->department) : ""; }
 
 void user_vo_init(struct UserVO *self, const char *username, const char *first, const char *last, const char *email, const char *password, enum DeptEnum department);

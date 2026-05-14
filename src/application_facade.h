@@ -4,6 +4,7 @@
 
 #define VERSION "EmployeeAdmin Version 1.0.0"
 #define STARTUP "startup"
+#define REGISTER "register"
 #define SERVICE "service"
 #define SERVICE_RESULT "service_result"
 #define SERVICE_FAULT "service_fault"
@@ -11,7 +12,7 @@
 struct ApplicationFacade {
     struct IFacade *super;
 
-    void (*registerComponent)(const struct ApplicationFacade *self, const char *mediatorName, void *component);
+    void (*registerComponent)(const struct ApplicationFacade *self, void *body, const char *type);
     void (*startup)(const struct ApplicationFacade *self, void *body);
 };
 

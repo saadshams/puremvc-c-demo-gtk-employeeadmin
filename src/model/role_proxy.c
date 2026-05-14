@@ -4,6 +4,18 @@
 
 #include <string.h>
 
+static void addItem(const struct RoleProxy *self, struct RoleVO *role) {
+    const struct IProxy *super = self->super;
+    struct RoleVO **data = super->getData(super);
+
+    for (size_t i = 0; i < MAX_USERS - 1; i++) {
+        if (data[i] == NULL) {
+            data[i] = role;
+            break;
+        }
+    }
+}
+
 static void addRoleToUser(const struct RoleProxy *self, const struct UserVO *user, const enum RoleEnum role) {
     const struct IProxy *super = self->super;
     struct RoleVO **data = super->getData(super);
@@ -55,6 +67,7 @@ struct IProxy *role_proxy_init(void *buffer, const char *name, void *data) {
 struct RoleProxy *role_proxy_bind(struct RoleProxy *proxy, struct IProxy *super) {
     proxy->super = super;
 
+    proxy->addItem = addItem;
     proxy->addRoleToUser = addRoleToUser;
     proxy->removeRoleFromUser = removeRoleFromUser;
 
