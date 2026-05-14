@@ -9,14 +9,14 @@ static void initializeController(struct IFacade *self, struct IController *contr
     self->registerCommand(self, STARTUP, startup_command_init);
 }
 
-static void registerComponent(const struct ApplicationFacade *self, void *body, const char *type) {
-    const struct IFacade *facade = self->super;
-    facade->sendNotification(facade, REGISTER, body, type);
-}
-
 static void startup(const struct ApplicationFacade *self, void *body) {
     const struct IFacade *facade = self->super;
     facade->sendNotification(facade, STARTUP, body, NULL);
+}
+
+static void registerComponent(const struct ApplicationFacade *self, void *component, const char *mediatorName) {
+    const struct IFacade *facade = self->super;
+    facade->sendNotification(facade, REGISTER, component, mediatorName);
 }
 
 struct IFacade *application_facade_getInstance(struct FacadeMap **facadeMap, const char *key) {

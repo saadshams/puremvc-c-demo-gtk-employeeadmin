@@ -26,11 +26,15 @@ int main(const int argc, char **argv) {
         NULL
     };
     struct ObserverMap **observerMap = (struct ObserverMap *[]) { // ObserverMap for Notifications
-        &(struct ObserverMap) { .observers = (struct IObserver *[]) {
-            memset(alloca(puremvc_observer_size()), 0, puremvc_observer_size()), NULL } // STARTUP Notification Observers
+        &(struct ObserverMap) {
+            .observers = (struct IObserver *[]) { // STARTUP Notification Observers
+                memset(alloca(puremvc_observer_size()), 0, puremvc_observer_size()), NULL
+            }
         },
-        &(struct ObserverMap) { .observers = (struct IObserver *[]) {
-            memset(alloca(puremvc_observer_size()), 0, puremvc_observer_size()), NULL } // REGISTER Notification Observers
+        &(struct ObserverMap) {
+            .observers = (struct IObserver *[]) { // REGISTER Notification Observers
+                memset(alloca(puremvc_observer_size()), 0, puremvc_observer_size()), NULL
+            }
         },
         NULL
     };

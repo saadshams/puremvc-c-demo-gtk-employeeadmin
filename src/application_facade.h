@@ -12,7 +12,7 @@
 struct ApplicationFacade {
     struct IFacade *super;
 
-    void (*registerComponent)(const struct ApplicationFacade *self, void *body, const char *type);
+    void (*registerComponent)(const struct ApplicationFacade *self, void *component, const char *mediatorName);
     void (*startup)(const struct ApplicationFacade *self, void *body);
 };
 
