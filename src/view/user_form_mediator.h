@@ -7,7 +7,7 @@
 struct UserFormMediator {
     struct IMediator *super;
 
-    void (*registerComponent)(const struct UserFormMediator *mediator, void *component);
+    void (*assign)(const struct UserFormMediator *mediator, void *component);
 };
 
 struct IMediator *user_form_mediator_init(void *buffer, const char *name, void *component);

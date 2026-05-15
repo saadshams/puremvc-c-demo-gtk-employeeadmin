@@ -51,7 +51,7 @@ static GtkWidget *layout(gpointer data) {
 static GtkWidget *master(gpointer data) {
     const struct ApplicationFacade *facade = data;
     GtkWidget *user = user_list_init();
-    facade->registerComponent(facade, user, UserListMediator_NAME);
+    facade->assign(facade, user, UserListMediator_NAME);
     return user;
 }
 
@@ -62,10 +62,10 @@ static GtkWidget *detail(gpointer data) {
     gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
 
     GtkWidget *form = user_form_init();
-    facade->registerComponent(facade, form, UserFormMediator_NAME);
+    facade->assign(facade, form, UserFormMediator_NAME);
 
     GtkWidget *role = user_role_init();
-    facade->registerComponent(facade, role, UserRoleMediator_NAME);
+    facade->assign(facade, role, UserRoleMediator_NAME);
 
     gtk_widget_set_hexpand(form, TRUE);
     gtk_widget_set_hexpand(role, TRUE);

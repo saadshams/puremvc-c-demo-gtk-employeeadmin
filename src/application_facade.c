@@ -14,7 +14,7 @@ static void startup(const struct ApplicationFacade *self, void *body) {
     facade->sendNotification(facade, STARTUP, body, NULL);
 }
 
-static void registerComponent(const struct ApplicationFacade *self, void *component, const char *mediatorName) {
+static void assign(const struct ApplicationFacade *self, void *component, const char *mediatorName) {
     const struct IFacade *facade = self->super;
     facade->sendNotification(facade, REGISTER, component, mediatorName);
 }
@@ -28,7 +28,7 @@ struct IFacade *application_facade_getInstance(struct FacadeMap **facadeMap, con
 
 struct ApplicationFacade *application_facade_bind(struct ApplicationFacade *facade, struct IFacade *super) {
     facade->super = super;
-    facade->registerComponent = registerComponent;
+    facade->assign = assign;
     facade->startup = startup;
     return facade;
 }

@@ -14,7 +14,7 @@
 struct ApplicationFacade {
     struct IFacade *super;
 
-    void (*registerComponent)(const struct ApplicationFacade *self, void *component, const char *mediatorName);
+    void (*assign)(const struct ApplicationFacade *self, void *component, const char *mediatorName);
     void (*startup)(const struct ApplicationFacade *self, void *body);
 };
 

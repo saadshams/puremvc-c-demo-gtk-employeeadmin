@@ -5,7 +5,7 @@
 
 #include <puremvc/puremvc.h>
 
-static void registerComponent(const struct UserListMediator *self, void *component) {
+static void assign(const struct UserListMediator *self, void *component) {
     struct IMediator *super = self->super;
     super->setComponent(super, component);
     user_list_set_delegate((struct IUserList) {
@@ -72,7 +72,7 @@ struct IMediator *user_list_mediator_init(void *buffer, const char *name, void *
 struct UserListMediator *user_list_mediator_bind(struct UserListMediator *mediator, struct IMediator *super) {
     mediator->super = super;
 
-    mediator->registerComponent = registerComponent;
+    mediator->assign = assign;
     mediator->get_user_list = get_user_list;
     mediator->on_new = on_new;
     mediator->on_delete = on_delete;

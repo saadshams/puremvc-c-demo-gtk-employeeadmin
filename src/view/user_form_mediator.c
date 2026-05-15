@@ -11,7 +11,7 @@ static void handleNotification(const struct IMediator *self, struct INotificatio
 
 }
 
-static void registerComponent(const struct UserFormMediator *mediator, void *component) {
+static void assign(const struct UserFormMediator *mediator, void *component) {
     struct IMediator *self = mediator->super;
     self->setComponent(self, component);
     user_form_set_delegate((struct IUserForm) { .context = self } );
@@ -26,6 +26,6 @@ struct IMediator *user_form_mediator_init(void *buffer, const char *name, void *
 
 struct UserFormMediator *user_form_mediator_bind(struct UserFormMediator *mediator, struct IMediator *super) {
     mediator->super = super;
-    mediator->registerComponent = registerComponent;
+    mediator->assign = assign;
     return mediator;
 }

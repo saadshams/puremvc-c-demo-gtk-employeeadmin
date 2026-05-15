@@ -9,7 +9,7 @@
 struct UserListMediator {
     struct IMediator *super;
 
-    void (*registerComponent)(const struct UserListMediator *mediator, void *component);
+    void (*assign)(const struct UserListMediator *mediator, void *component);
 
     size_t (*get_user_list)(const struct IMediator *self, struct UserVO **out, size_t max);
     void (*on_new)(const struct IMediator *self, const struct UserVO *user);

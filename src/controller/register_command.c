@@ -15,13 +15,13 @@ static void execute(const struct ICommand *self, struct INotification *notificat
     struct IMediator *super = facade->retrieveMediator(facade, mediatorName);
     if (strcmp(mediatorName, UserListMediator_NAME) == 0) { // register delegate within mediator scope
         const struct UserListMediator *mediator = user_list_mediator_bind(&(struct UserListMediator){}, super);
-        mediator->registerComponent(mediator, component);
+        mediator->assign(mediator, component);
     } else if (strcmp(mediatorName, UserFormMediator_NAME) == 0) {
         const struct UserFormMediator *mediator = user_form_mediator_bind(&(struct UserFormMediator){}, super);
-        mediator->registerComponent(mediator, component);
+        mediator->assign(mediator, component);
     } else if (strcmp(mediatorName, UserRoleMediator_NAME) == 0) {
         const struct UserRoleMediator *mediator = user_role_mediator_bind(&(struct UserRoleMediator){}, super);
-        mediator->registerComponent(mediator, component);
+        mediator->assign(mediator, component);
     }
 }
 

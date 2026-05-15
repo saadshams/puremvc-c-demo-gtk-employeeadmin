@@ -11,7 +11,7 @@ static void handleNotification(const struct IMediator *self, struct INotificatio
 
 }
 
-static void registerComponent(const struct UserRoleMediator *mediator, void *component) {
+static void assign(const struct UserRoleMediator *mediator, void *component) {
     struct IMediator *self = mediator->super;
     self->setComponent(self, component);
     user_role_set_delegate((struct IUserRole) { .context = self } );
@@ -26,6 +26,6 @@ struct IMediator *user_role_mediator_init(void *buffer, const char *name, void *
 
 struct UserRoleMediator *user_role_mediator_bind(struct UserRoleMediator *mediator, struct IMediator *super) {
     mediator->super = super;
-    mediator->registerComponent = registerComponent;
+    mediator->assign = assign;
     return mediator;
 }
