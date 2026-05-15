@@ -6,5 +6,8 @@
 
 struct IUserList {
     void *context;
-    size_t (*list)(void *context, struct UserVO **out, size_t max);
+    size_t (*get_user_list)(void *context, struct UserVO **out, size_t max);
+    void (*on_new)(void *context, const struct UserVO *user);
+    void (*on_delete)(void *context, const struct UserVO *user);
+    void (*on_select)(void *context, const struct UserVO *user);
 };

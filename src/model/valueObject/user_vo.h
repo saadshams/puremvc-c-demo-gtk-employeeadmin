@@ -22,14 +22,14 @@ struct UserVO {
 typedef struct {
     GObject parent_instance;
     struct UserVO *user;
-} UserObject;
+} UserVOObject;
 
 typedef struct {
     GObjectClass parent_class;
-} UserObjectClass;
+} UserVOObjectClass;
 
-GType user_object_get_type(void);
-UserObject *user_object_new(struct UserVO *user);
+GType user_vo_object_get_type(void);
+UserVOObject *user_vo_object_new(struct UserVO *user);
 
 static const char *user_vo_get_username(const struct UserVO *self) { return self ? self->username : ""; }
 static const char *user_vo_get_first(const struct UserVO *self) { return self ? self->first : ""; }

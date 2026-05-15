@@ -6,43 +6,39 @@ static GtkWidget *column_view;
 static GtkSingleSelection *selection;
 static GtkWidget *delete;
 
-// signal handlers
+// Signal handlers
+static void on_new(GtkButton *button, gpointer data) {
+    gtk_single_selection_set_selected(selection, GTK_INVALID_LIST_POSITION);
+    delegate.on_new(delegate.context, NULL);
+}
+
+static void on_delete(GtkButton *button, gpointer data) {
+    UserVOObject *object = gtk_single_selection_get_selected_item(selection);
+    const struct UserVO *user = object->user;
+    delegate.on_delete(delegate.context, user);
+}
+
 static void on_select(GtkSingleSelection *sel, GParamSpec *pspec, gpointer data) {
     guint position = gtk_single_selection_get_selected(sel);
     gtk_widget_set_sensitive(delete, position != GTK_INVALID_LIST_POSITION);
 
     if (position == GTK_INVALID_LIST_POSITION) return;
 
-    const struct UserVO *user = ((UserObject *) gtk_single_selection_get_selected_item(sel))->user;
-    g_print("Selected user: %s, %s %s, %s, dept=%d\n", user->username, user->first, user->last, user->email, user->department);
-}
-
-static void on_delete(GtkButton *button, gpointer data) {
-    UserObject *object = gtk_single_selection_get_selected_item(selection);
-
-    const struct UserVO *user = object->user;
-    g_print("Delete clicked for user: %s, %s %s, %s, dept=%d\n", user->username, user->first, user->last, user->email, user->department);
-}
-
-static void on_new(GtkButton *button, gpointer data) {
-    gtk_single_selection_set_selected(selection, GTK_INVALID_LIST_POSITION);
-    g_print("New clicked: selection cleared\n");
+    const struct UserVO *user = ((UserVOObject *) gtk_single_selection_get_selected_item(sel))->user;
+    delegate.on_select(delegate.context, user);
 }
 
 // UI helpers
-static void setup_label(GtkSignalListItemFactory *factory, GtkListItem *list_item, gpointer data) {
+static void setup(GtkSignalListItemFactory *factory, GtkListItem *list_item, gpointer data) {
     GtkWidget *label = gtk_label_new("");
     gtk_label_set_xalign(GTK_LABEL(label), 0.0);
     gtk_widget_set_halign(label, GTK_ALIGN_START);
     gtk_list_item_set_child(list_item, label);
 }
 
-static void bind_label(GtkSignalListItemFactory *factory, GtkListItem *list_item, gpointer data) {
+static void bind(GtkSignalListItemFactory *factory, GtkListItem *list_item, gpointer data) {
     GtkWidget *label = gtk_list_item_get_child(list_item);
-    UserObject *object = gtk_list_item_get_item(list_item);
-
-    if (object == NULL || object->user == NULL)
-        return gtk_label_set_text(GTK_LABEL(label), "");
+    const UserVOObject *object = gtk_list_item_get_item(list_item);
 
     const char *(*getter)(const struct UserVO *user) = data;
     gtk_label_set_text(GTK_LABEL(label), getter(object->user));
@@ -51,8 +47,8 @@ static void bind_label(GtkSignalListItemFactory *factory, GtkListItem *list_item
 static GtkColumnViewColumn *create_text_column(const char *title, const char *(*getter)(const struct UserVO *user)) {
     GtkListItemFactory *factory = gtk_signal_list_item_factory_new();
 
-    g_signal_connect(factory, "setup", G_CALLBACK(setup_label), NULL);
-    g_signal_connect(factory, "bind", G_CALLBACK(bind_label), getter);
+    g_signal_connect(factory, "setup", G_CALLBACK(setup), NULL);
+    g_signal_connect(factory, "bind", G_CALLBACK(bind), getter);
 
     GtkColumnViewColumn *column = gtk_column_view_column_new(title, factory);
     gtk_column_view_column_set_expand(column, TRUE);
@@ -136,25 +132,23 @@ GtkWidget *user_list_init() {
 }
 
 void user_list_run() {
-    if (delegate.list) {
-        struct UserVO *users[MAX_USERS] = {0};
-        const size_t count = delegate.list(delegate.context, users, MAX_USERS);
+    struct UserVO *users[MAX_USERS] = {0};
+    const size_t count = delegate.get_user_list(delegate.context, users, MAX_USERS);
 
-        GListStore *store = g_list_store_new(user_object_get_type());
-        for (size_t i = 0; i < count; i++) {
-            UserObject *object = user_object_new(users[i]);
-            g_list_store_append(store, object);
-            g_object_unref(object);
-        }
-
-        selection = gtk_single_selection_new(G_LIST_MODEL(store));
-        gtk_single_selection_set_autoselect(selection, FALSE);
-        gtk_single_selection_set_can_unselect(selection, TRUE);
-        gtk_single_selection_set_selected(selection, GTK_INVALID_LIST_POSITION);
-
-        g_signal_connect(selection, "notify::selected", G_CALLBACK(on_select), NULL);
-        gtk_column_view_set_model(GTK_COLUMN_VIEW(column_view), GTK_SELECTION_MODEL(selection));
+    GListStore *store = g_list_store_new(user_vo_object_get_type());
+    for (size_t i = 0; i < count; i++) {
+        UserVOObject *object = user_vo_object_new(users[i]);
+        g_list_store_append(store, object);
+        g_object_unref(object);
     }
+
+    selection = gtk_single_selection_new(G_LIST_MODEL(store));
+    gtk_single_selection_set_autoselect(selection, FALSE);
+    gtk_single_selection_set_can_unselect(selection, TRUE);
+    gtk_single_selection_set_selected(selection, GTK_INVALID_LIST_POSITION);
+
+    g_signal_connect(selection, "notify::selected", G_CALLBACK(on_select), NULL);
+    gtk_column_view_set_model(GTK_COLUMN_VIEW(column_view), GTK_SELECTION_MODEL(selection));
 }
 
 void user_list_set_delegate(struct IUserList _delegate) {

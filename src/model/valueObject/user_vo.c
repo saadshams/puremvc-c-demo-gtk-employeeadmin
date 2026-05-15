@@ -26,16 +26,18 @@ void user_vo_init(struct UserVO *self, const char *username, const char *first, 
     self->givenName = givenName;
 }
 
-G_DEFINE_TYPE(UserObject, user_object, G_TYPE_OBJECT)
+G_DEFINE_TYPE(UserVOObject, user_vo_object, G_TYPE_OBJECT)
 
-static void user_object_class_init(UserObjectClass *klass) {}
+static void user_vo_object_class_init(UserVOObjectClass *klass) {
 
-static void user_object_init(UserObject *self) {
+}
+
+static void user_vo_object_init(UserVOObject *self) {
     self->user = NULL;
 }
 
-UserObject *user_object_new(struct UserVO *user) {
-    UserObject *object = g_object_new(user_object_get_type(), NULL);
+UserVOObject *user_vo_object_new(struct UserVO *user) {
+    UserVOObject *object = g_object_new(user_vo_object_get_type(), NULL);
     object->user = user;
     return object;
 }
