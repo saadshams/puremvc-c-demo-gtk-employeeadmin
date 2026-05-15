@@ -54,8 +54,6 @@ static void on_delete(const struct IMediator *self, struct UserVO *user) {
 }
 
 static void on_select(const struct IMediator *self, struct UserVO *user) {
-    g_print("Selected user: %s, %s %s, %s, dept=%d\n", user->username, user->first, user->last, user->email, user->department);
-
     const struct INotifier *notifier = self->getNotifier(self);
     const struct IFacade *facade = notifier->getFacade(notifier);
     facade->sendNotification(facade, USER_SELECTED, user, NULL);

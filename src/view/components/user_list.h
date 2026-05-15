@@ -4,7 +4,7 @@
 
 #include "gtk/gtk.h"
 
-GtkWidget *user_list_init();
+GtkWidget *user_list_init(GtkWidget *window);
 
 void user_list_run();
 

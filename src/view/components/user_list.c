@@ -2,10 +2,11 @@
 #include "model/valueObject/user_vo.h"
 #include "employee_admin/i_user_list.h"
 
-static struct IUserList delegate;
-static GtkWidget *column_view;
+static GListStore *store;
 static GtkSingleSelection *selection;
+static GtkWidget *column_view;
 static GtkWidget *delete;
+static struct IUserList delegate;
 
 // Signal handlers
 static void on_new(GtkButton *button, gpointer data) {
@@ -30,6 +31,22 @@ static void on_select(GtkSingleSelection *sel, GParamSpec *pspec, gpointer data)
 
     const struct UserVO *user = ((UserVOObject *) gtk_single_selection_get_selected_item(sel))->user;
     delegate.on_select(delegate.context, user);
+}
+
+static gboolean on_close_request(GtkWindow *window, gpointer data) {
+    (void) window;
+    (void) data;
+
+    if (column_view)
+        gtk_column_view_set_model(GTK_COLUMN_VIEW(column_view), NULL);
+
+    g_clear_object(&selection);
+    g_clear_object(&store);
+
+    column_view = NULL;
+    delete = NULL;
+
+    return FALSE; // allow GTK to continue closing the window
 }
 
 // UI helpers
@@ -62,6 +79,7 @@ static GtkColumnViewColumn *create_text_column(const char *title, const char *(*
     return column;
 }
 
+// Layout
 static GtkWidget *header() {
     GtkWidget *label = gtk_label_new("Users");
     gtk_widget_add_css_class(label, "title-4");
@@ -117,9 +135,10 @@ static GtkWidget *footer() {
     return box;
 }
 
-GtkWidget *user_list_init() {
-    GtkWidget *frame = gtk_frame_new(NULL);
+GtkWidget *user_list_init(GtkWidget *window) {
+    g_signal_connect(GTK_WINDOW(window), "close-request", G_CALLBACK(on_close_request), NULL);
 
+    GtkWidget *frame = gtk_frame_new(NULL);
     gtk_frame_set_label_widget(GTK_FRAME(frame), header()); // Header
 
     GtkWidget *content_area = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6); // Layout Container
@@ -141,7 +160,8 @@ void user_list_run() {
     struct UserVO *users[MAX_USERS] = {0};
     const size_t count = delegate.get_users(delegate.context, users, MAX_USERS);
 
-    GListStore *store = g_list_store_new(user_vo_object_get_type());
+    store = g_list_store_new(user_vo_object_get_type());
+
     for (size_t i = 0; i < count; i++) {
         UserVOObject *object = user_vo_object_new(users[i]);
         g_list_store_append(store, object);
@@ -149,6 +169,7 @@ void user_list_run() {
     }
 
     selection = gtk_single_selection_new(G_LIST_MODEL(store));
+
     gtk_single_selection_set_autoselect(selection, FALSE);
     gtk_single_selection_set_can_unselect(selection, TRUE);
     gtk_single_selection_set_selected(selection, GTK_INVALID_LIST_POSITION);

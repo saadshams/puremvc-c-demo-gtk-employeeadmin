@@ -4,33 +4,15 @@
 
 struct IUserRole delegate;
 
-void user_role_set_delegate(struct IUserRole _delegate) {
-    delegate = _delegate;
+// Signal handlers
+static gboolean on_close_request(GtkWindow *window, gpointer data) {
+    (void) window;
+    (void) data;
+
+    return FALSE; // allow GTK to continue closing the window
 }
 
-static GtkWidget *header();
-static GtkWidget *body();
-static GtkWidget *footer();
-
-GtkWidget *user_role_init() {
-    GtkWidget *frame = gtk_frame_new(NULL);
-
-    gtk_frame_set_label_widget(GTK_FRAME(frame), header()); // Header
-
-    GtkWidget *content_area = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);  // Layout Container
-    gtk_widget_set_margin_start(content_area, 15);
-    gtk_widget_set_margin_end(content_area, 15);
-    gtk_widget_set_margin_top(content_area, 15);
-    gtk_widget_set_margin_bottom(content_area, 10);
-
-    gtk_box_append(GTK_BOX(content_area), body()); // Assembly
-    gtk_box_append(GTK_BOX(content_area), footer());
-
-    gtk_frame_set_child(GTK_FRAME(frame), content_area);
-
-    return frame;
-}
-
+// Layout
 static GtkWidget *header() {
     GtkWidget *label = gtk_label_new("User Role");
     gtk_widget_add_css_class(label, "title-4");
@@ -85,4 +67,28 @@ static GtkWidget *footer() {
     gtk_box_append(GTK_BOX(box), remove);
 
     return box;
+}
+
+GtkWidget *user_role_init(GtkWidget *window) {
+    g_signal_connect(GTK_WINDOW(window), "close-request", G_CALLBACK(on_close_request), NULL);
+
+    GtkWidget *frame = gtk_frame_new(NULL);
+    gtk_frame_set_label_widget(GTK_FRAME(frame), header()); // Header
+
+    GtkWidget *content_area = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);  // Layout Container
+    gtk_widget_set_margin_start(content_area, 15);
+    gtk_widget_set_margin_end(content_area, 15);
+    gtk_widget_set_margin_top(content_area, 15);
+    gtk_widget_set_margin_bottom(content_area, 10);
+
+    gtk_box_append(GTK_BOX(content_area), body()); // Assembly
+    gtk_box_append(GTK_BOX(content_area), footer());
+
+    gtk_frame_set_child(GTK_FRAME(frame), content_area);
+
+    return frame;
+}
+
+void user_role_set_delegate(struct IUserRole _delegate) {
+    delegate = _delegate;
 }

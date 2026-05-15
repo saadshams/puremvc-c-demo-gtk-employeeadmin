@@ -31,10 +31,10 @@ typedef struct {
 GType user_vo_object_get_type(void);
 UserVOObject *user_vo_object_new(struct UserVO *user);
 
-static const char *user_vo_get_username(const struct UserVO *self) { return self ? self->username : ""; }
-static const char *user_vo_get_first(const struct UserVO *self) { return self ? self->first : ""; }
-static const char *user_vo_get_last(const struct UserVO *self) { return self ? self->last : ""; }
-static const char *user_vo_get_email(const struct UserVO *self) { return self ? self->email : ""; }
-static const char *user_vo_get_department(const struct UserVO *self) { return self ? dept_to_string(self->department) : ""; }
+const char *user_vo_get_username(const struct UserVO *self);
+const char *user_vo_get_first(const struct UserVO *self);
+const char *user_vo_get_last(const struct UserVO *self);
+const char *user_vo_get_email(const struct UserVO *self);
+const char *user_vo_get_department(const struct UserVO *self);
 
 void user_vo_init(struct UserVO *self, const char *username, const char *first, const char *last, const char *email, const char *password, enum DeptEnum department);
