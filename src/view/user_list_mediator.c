@@ -10,10 +10,10 @@ static void assign(const struct UserListMediator *self, void *component) {
     super->setComponent(super, component);
     user_list_set_delegate((struct IUserList) {
         .context = super,
-        .get_user_list = (size_t (*) (void *, struct UserVO **, size_t)) self->get_user_list,
-        .on_new = (void (*) (void *, const struct UserVO *)) self->on_new,
-        .on_delete = (void (*) (void *, struct UserVO *)) self->on_delete,
-        .on_select = (void (*) (void *, const struct UserVO *)) self->on_select
+        .get_user_list = (size_t (*) (void *, void *, size_t)) self->get_user_list,
+        .on_new = (void (*) (void *, void *)) self->on_new,
+        .on_delete = (void (*) (void *, void *)) self->on_delete,
+        .on_select = (void (*) (void *, void *)) self->on_select
     });
     user_list_run();
 }
