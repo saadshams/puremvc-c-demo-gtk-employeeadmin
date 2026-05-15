@@ -2,17 +2,15 @@
 
 #include "employee_admin/i_user_form.h"
 #include "model/enum/dept_enum.h"
-#include "model/valueObject/user_vo.h"
 
 static GtkWidget *first, *last, *email, *username, *password, *confirm, *department;
-static const struct UserVO *current_user;
+static const struct UserVO *user;
+static char *confirm_password;
 struct IUserForm delegate;
 
 // Signal handlers
 static gboolean on_close_request(GtkWindow *window, gpointer data) {
-    (void) window;
-    (void) data;
-
+    (void) window; (void) data;
     return FALSE;
 }
 
@@ -54,20 +52,20 @@ static GtkWidget *body(void) {
     gtk_entry_set_visibility(GTK_ENTRY(password), FALSE);
     gtk_entry_set_visibility(GTK_ENTRY(confirm), FALSE);
 
-    GtkWidget *dept_label = gtk_label_new("Department *");
-    gtk_widget_set_halign(dept_label, GTK_ALIGN_END);
-    gtk_grid_attach(GTK_GRID(grid), dept_label, 0, 6, 1, 1);
+    GtkWidget *label = gtk_label_new("Department *");
+    gtk_widget_set_halign(label, GTK_ALIGN_END);
+    gtk_grid_attach(GTK_GRID(grid), label, 0, 6, 1, 1);
 
-    GtkStringList *departments = gtk_string_list_new(NULL);
+    GtkStringList *values = gtk_string_list_new(NULL);
     for (size_t i = 0; i < DEPT_COMBO_LIST_COUNT; i++) {
-        gtk_string_list_append(departments, dept_to_string(DEPT_COMBO_LIST[i]));
+        gtk_string_list_append(values, dept_to_string(DEPT_COMBO_LIST[i]));
     }
 
-    GtkWidget *dropdown = gtk_drop_down_new(G_LIST_MODEL(departments), NULL);
-    g_object_unref(departments);
-    gtk_widget_set_hexpand(dropdown, TRUE);
-    gtk_widget_set_halign(dropdown, GTK_ALIGN_FILL);
-    gtk_grid_attach(GTK_GRID(grid), dropdown, 1, 6, 2, 1);
+    department = gtk_drop_down_new(G_LIST_MODEL(values), NULL);
+    g_object_unref(values);
+    gtk_widget_set_hexpand(department, TRUE);
+    gtk_widget_set_halign(department, GTK_ALIGN_FILL);
+    gtk_grid_attach(GTK_GRID(grid), department, 1, 6, 2, 1);
 
     return grid;
 }
@@ -114,15 +112,16 @@ GtkWidget *user_form_init(GtkWidget *window) {
     return frame;
 }
 
-void user_form_set_user(const struct UserVO *user) {
-    current_user = user;
+void user_form_set_user(const struct UserVO *_user) {
+    user = _user;
+    confirm_password = (char *) user->password;
 
     gtk_editable_set_text(GTK_EDITABLE(first), user_vo_get_first(user));
     gtk_editable_set_text(GTK_EDITABLE(last), user_vo_get_last(user));
     gtk_editable_set_text(GTK_EDITABLE(email), user_vo_get_email(user));
     gtk_editable_set_text(GTK_EDITABLE(username), user_vo_get_username(user));
     gtk_editable_set_text(GTK_EDITABLE(password), user->password ? user->password : "");
-    gtk_editable_set_text(GTK_EDITABLE(confirm), user->password ? user->password : "");
+    gtk_editable_set_text(GTK_EDITABLE(confirm), confirm_password ? confirm_password : "");
 
     guint position = 0;
     for (guint i = 0; i < DEPT_COMBO_LIST_COUNT; i++) {

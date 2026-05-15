@@ -28,7 +28,7 @@ static void execute(const struct ICommand *self, struct INotification *notificat
     user_proxy->add(user_proxy, &(struct UserVO) { .username = "cstooge", .first = "Curly", .last = "Stooge",
         .email = "curly@stooges.com", .password = "xyz987", .department = DEPT_SALES });
     user_proxy->add(user_proxy, &(struct UserVO) { .username = "mstooge", .first = "Moe", .last = "Stooge",
-        .email = "moe@stooges.com", .password = "abc123", .department = DEPT_SALES });
+        .email = "moe@stooges.com", .password = "abc123", .department = DEPT_PLANT });
 
     const struct RoleProxy *role_proxy = (struct RoleProxy *) facade->retrieveProxy(facade, RoleProxy_NAME);
     role_proxy->addItem(role_proxy, &(struct RoleVO) { .username = "lstooge", .roles = {ROLE_PAYROLL} });

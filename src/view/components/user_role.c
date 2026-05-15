@@ -6,10 +6,8 @@ struct IUserRole delegate;
 
 // Signal handlers
 static gboolean on_close_request(GtkWindow *window, gpointer data) {
-    (void) window;
-    (void) data;
-
-    return FALSE; // allow GTK to continue closing the window
+    (void) window; (void) data;
+    return FALSE;
 }
 
 // Layout

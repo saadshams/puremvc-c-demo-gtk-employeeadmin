@@ -1,6 +1,5 @@
 #include "user_form_mediator.h"
 #include "application_facade.h"
-#include "model/valueObject/user_vo.h"
 #include "components/user_form.h"
 
 static const char *const *listNotificationInterests(const struct IMediator *self) {
@@ -12,14 +11,7 @@ static const char *const *listNotificationInterests(const struct IMediator *self
 static void handleNotification(const struct IMediator *self, struct INotification *notification) {
     const char *name = notification->getName(notification);
     if (strcmp(name, USER_SELECTED) == 0) {
-        const struct UserVO *user = notification->getBody(notification);
-
-        g_print("Notification: USER_SELECTED -> %s, %s %s, %s, dept=%d\n", user->username,
-            user->first,
-            user->last,
-            user->email,
-            user->department
-        );
+        user_form_set_user(notification->getBody(notification));
     }
 }
 
