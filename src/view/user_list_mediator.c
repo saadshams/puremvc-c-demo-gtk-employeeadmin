@@ -1,4 +1,5 @@
 #include "user_list_mediator.h"
+
 #include "application_facade.h"
 #include "model/user_proxy.h"
 #include "view/components/user_list.h"
@@ -11,23 +12,24 @@ static void assign(const struct UserListMediator *self, void *component) {
     user_list_set_delegate((struct IUserList) {
         .context = super,
         .get_users = (size_t (*) (void *, void *, size_t)) self->get_users,
-        .on_new = (void (*) (void *, void *)) self->on_new,
-        .on_delete = (void (*) (void *, void *)) self->on_delete,
-        .on_select = (void (*) (void *, void *)) self->on_select
+        .on_new = (void (*) (void *, const void *)) self->on_new,
+        .on_delete = (void (*) (void *, const void *)) self->on_delete,
+        .on_select = (void (*) (void *, const void *)) self->on_select
     });
     user_list_run();
 }
 
-static void onRegister(struct IMediator *self) {}
-
 static const char *const *listNotificationInterests(const struct IMediator *self) {
     (void) self;
-    static const char *interests[] = { NULL };
+    static const char *interests[] = { USER_UPDATED, NULL };
     return interests;
 }
 
 static void handleNotification(const struct IMediator *self, struct INotification *notification) {
-
+    const char *name = notification->getName(notification);
+    if (strcmp(name, USER_UPDATED) == 0) {
+        user_list_refresh(notification->getBody(notification));
+    }
 }
 
 static size_t get_users(const struct IMediator *self, struct UserVO **out, const size_t max) {
@@ -61,7 +63,6 @@ static void on_select(const struct IMediator *self, struct UserVO *user) {
 
 struct IMediator *user_list_mediator_init(void *buffer, const char *name, void *component) {
     struct IMediator *mediator = puremvc_mediator_init(buffer, name, component);
-    mediator->onRegister = onRegister;
     mediator->listNotificationInterests = listNotificationInterests;
     mediator->handleNotification = handleNotification;
     return mediator;

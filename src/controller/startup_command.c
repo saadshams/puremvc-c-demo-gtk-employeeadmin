@@ -23,12 +23,13 @@ static void execute(const struct ICommand *self, struct INotification *notificat
     struct IProxy *super = facade->retrieveProxy(facade, UserProxy_NAME);
     struct UserProxy *user_proxy = user_proxy_extend(&(struct UserProxy) {}, super);
 
-    user_proxy->add(user_proxy, &(struct UserVO) { .username = "lstooge", .first = "Larry", .last = "Stooge",
-        .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT });
-    user_proxy->add(user_proxy, &(struct UserVO) { .username = "cstooge", .first = "Curly", .last = "Stooge",
-        .email = "curly@stooges.com", .password = "xyz987", .department = DEPT_SALES });
-    user_proxy->add(user_proxy, &(struct UserVO) { .username = "mstooge", .first = "Moe", .last = "Stooge",
-        .email = "moe@stooges.com", .password = "abc123", .department = DEPT_PLANT });
+
+    user_proxy->add(user_proxy, user_vo_init(&(struct UserVO) {}, "lstooge", "Larry", "Stooge",
+        "larry@stooges.com", "ijk456", DEPT_ACCT));
+    user_proxy->add(user_proxy, user_vo_init(&(struct UserVO) {}, "cstooge", "Curly", "Stooge",
+    "curly@stooges.com", "xyz987", DEPT_SALES));
+    user_proxy->add(user_proxy, user_vo_init(&(struct UserVO) {}, "mstooge", "Moe", "Stooge",
+     "moe@stooges.com", "abc123", DEPT_PLANT));
 
     const struct RoleProxy *role_proxy = (struct RoleProxy *) facade->retrieveProxy(facade, RoleProxy_NAME);
     role_proxy->addItem(role_proxy, &(struct RoleVO) { .username = "lstooge", .roles = {ROLE_PAYROLL} });

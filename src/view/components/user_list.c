@@ -1,5 +1,4 @@
 #include "user_list.h"
-#include "model/valueObject/user_vo.h"
 #include "employee_admin/i_user_list.h"
 
 static GListStore *store;
@@ -18,7 +17,7 @@ static void on_new(GtkButton *button, gpointer data) {
 static void on_delete(GtkButton *button, gpointer data) {
     (void) button; (void) data;
     UserVOObject *object = gtk_single_selection_get_selected_item(selection);
-    struct UserVO *user = object->user;
+    const struct UserVO *user = object->user;
     delegate.on_delete(delegate.context, user);
 }
 
@@ -29,7 +28,7 @@ static void on_select(GtkSingleSelection *sel, GParamSpec *pspec, gpointer data)
 
     if (position == GTK_INVALID_LIST_POSITION) return;
 
-    struct UserVO *user = ((UserVOObject *) gtk_single_selection_get_selected_item(sel))->user;
+    const struct UserVO *user = ((UserVOObject *) gtk_single_selection_get_selected_item(sel))->user;
     delegate.on_select(delegate.context, user);
 }
 
@@ -135,6 +134,7 @@ static GtkWidget *footer() {
     return box;
 }
 
+// Public methods
 GtkWidget *user_list_init(GtkWidget *window) {
     g_signal_connect(GTK_WINDOW(window), "close-request", G_CALLBACK(on_close_request), NULL);
 
@@ -176,6 +176,29 @@ void user_list_run() {
 
     g_signal_connect(selection, "notify::selected", G_CALLBACK(on_select), NULL);
     gtk_column_view_set_model(GTK_COLUMN_VIEW(column_view), GTK_SELECTION_MODEL(selection));
+}
+
+void user_list_refresh(const struct UserVO *user) {
+    guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
+
+    for (guint i = 0; i < count; i++) {
+        UserVOObject *object = g_list_model_get_item(G_LIST_MODEL(store), i);
+
+        if (object && object->user == user) {
+            UserVOObject *replacement = user_vo_object_new(user);
+
+            g_list_store_splice(store, i, 1, (gpointer *) &replacement, 1);
+
+            g_object_unref(replacement);
+            g_object_unref(object);
+
+            return;
+        }
+
+        if (object) {
+            g_object_unref(object);
+        }
+    }
 }
 
 void user_list_set_delegate(struct IUserList _delegate) {

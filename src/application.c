@@ -57,6 +57,19 @@ static GtkWidget *layout(GtkWidget *window, gpointer data) {
     return box;
 }
 
+static void load_css(void) {
+    GtkCssProvider *provider = gtk_css_provider_new();
+    gtk_css_provider_load_from_string(provider,
+        ".error {"
+        "  border: 1px solid red;"
+        "}"
+    );
+    gtk_style_context_add_provider_for_display(gdk_display_get_default(), GTK_STYLE_PROVIDER(provider),
+        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+    g_object_unref(provider);
+}
+
 static void activate(GtkApplication *app, gpointer data) {
     GtkWidget *window = gtk_application_window_new(app);
 
@@ -66,6 +79,8 @@ static void activate(GtkApplication *app, gpointer data) {
 
     gtk_window_set_child(GTK_WINDOW(window), layout(window, data));
     gtk_window_present(GTK_WINDOW(window));
+
+    load_css();
 }
 
 GtkApplication *getApp(gpointer data) {

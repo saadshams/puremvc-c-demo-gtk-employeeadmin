@@ -7,9 +7,12 @@
 
 #define NEW_USER "newUser"
 #define DELETE_USER "deleteUser"
-#define USER_SELECTED "userSelected"
-
 #define CANCEL_SELECTED "cancelSelected"
+
+#define USER_SELECTED "userSelected"
+#define USER_ADDED "userAdded"
+#define USER_UPDATED "userUpdated"
+#define USER_DELETED "userDeleted"
 
 struct ApplicationFacade {
     struct IFacade *super;

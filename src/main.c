@@ -46,6 +46,11 @@ int main(const int argc, char **argv) {
                 memset(alloca(puremvc_observer_size()), 0, puremvc_observer_size()), NULL
             }
         },
+        &(struct ObserverMap) {
+            .observers = (struct IObserver *[]) { // USER_UPDATED Notification Observers
+                memset(alloca(puremvc_observer_size()), 0, puremvc_observer_size()), NULL
+            }
+        },
         NULL
     };
 

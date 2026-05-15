@@ -5,7 +5,6 @@
 
 static GtkWidget *first, *last, *email, *username, *password, *confirm, *department;
 static struct UserVO *user;
-static char *confirm_password;
 struct IUserForm delegate;
 
 // Signal handlers
@@ -21,19 +20,10 @@ static void on_update(GtkButton *button, gpointer data) {
     guint position = gtk_drop_down_get_selected(GTK_DROP_DOWN(department));
     user->department = position >= DEPT_COMBO_LIST_COUNT ? DEPT_NONE_SELECTED : DEPT_COMBO_LIST[position];
 
-    g_print(
-        "Updated user: %s, %s %s, %s, dept=%d\n",
-        user->username,
-        user->first,
-        user->last,
-        user->email,
-        user->department
-    );
-
-    // if (delegate.on_update) {
-    //     delegate.on_update(delegate.context, user);
-    // }
+    if (user->validate(username, password, confirm, department))
+        delegate.on_update(delegate.context, user);
 }
+
 static gboolean on_close_request(GtkWindow *window, gpointer data) {
     (void) window; (void) data;
     return FALSE;
@@ -138,16 +128,30 @@ GtkWidget *user_form_init(GtkWidget *window) {
     return frame;
 }
 
+void user_form_reset(void) {
+    user = NULL;
+
+    gtk_editable_set_text(GTK_EDITABLE(first), "");
+    gtk_editable_set_text(GTK_EDITABLE(last), "");
+    gtk_editable_set_text(GTK_EDITABLE(email), "");
+    gtk_editable_set_text(GTK_EDITABLE(username), "");
+    gtk_widget_set_sensitive(username, TRUE);
+    gtk_editable_set_text(GTK_EDITABLE(password), "");
+    gtk_editable_set_text(GTK_EDITABLE(confirm), "");
+
+    gtk_drop_down_set_selected(GTK_DROP_DOWN(department), 0);
+}
+
 void user_form_set_user(struct UserVO *_user) {
     user = _user;
-    confirm_password = user->password;
 
     gtk_editable_set_text(GTK_EDITABLE(first), user_vo_get_first(user));
     gtk_editable_set_text(GTK_EDITABLE(last), user_vo_get_last(user));
     gtk_editable_set_text(GTK_EDITABLE(email), user_vo_get_email(user));
     gtk_editable_set_text(GTK_EDITABLE(username), user_vo_get_username(user));
+    gtk_widget_set_sensitive(username, FALSE);
     gtk_editable_set_text(GTK_EDITABLE(password), user->password ? user->password : "");
-    gtk_editable_set_text(GTK_EDITABLE(confirm), confirm_password ? confirm_password : "");
+    gtk_editable_set_text(GTK_EDITABLE(confirm), user->password ? user->password : "");
 
     guint position = 0;
     for (guint i = 0; i < DEPT_COMBO_LIST_COUNT; i++) {
