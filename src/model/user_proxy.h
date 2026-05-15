@@ -11,7 +11,7 @@ struct UserProxy {
 
     size_t (*count)(const struct UserProxy *self);
     bool (*indexOf)(const struct UserProxy *self, const char *username, size_t *out);
-    size_t (*list)(const struct UserProxy *self, struct UserVO **out, size_t max);
+    size_t (*get_users)(const struct UserProxy *self, struct UserVO **out, size_t max);
     bool (*add)(const struct UserProxy *self, const struct UserVO *user);
     bool (*update)(const struct UserProxy *self, const struct UserVO *user);
     bool (*delete)(const struct UserProxy *self, const struct UserVO *user, struct UserVO *out);

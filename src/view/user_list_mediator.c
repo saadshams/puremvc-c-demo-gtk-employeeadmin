@@ -10,7 +10,7 @@ static void assign(const struct UserListMediator *self, void *component) {
     super->setComponent(super, component);
     user_list_set_delegate((struct IUserList) {
         .context = super,
-        .get_user_list = (size_t (*) (void *, void *, size_t)) self->get_user_list,
+        .get_users = (size_t (*) (void *, void *, size_t)) self->get_users,
         .on_new = (void (*) (void *, void *)) self->on_new,
         .on_delete = (void (*) (void *, void *)) self->on_delete,
         .on_select = (void (*) (void *, void *)) self->on_select
@@ -30,13 +30,13 @@ static void handleNotification(const struct IMediator *self, struct INotificatio
 
 }
 
-static size_t get_user_list(const struct IMediator *self, struct UserVO **out, const size_t max) {
+static size_t get_users(const struct IMediator *self, struct UserVO **out, const size_t max) {
     const struct INotifier *notifier = self->getNotifier(self);
     const struct IFacade *facade = notifier->getFacade(notifier);
 
     struct IProxy *proxy = facade->retrieveProxy(facade, UserProxy_NAME);
     const struct UserProxy *userProxy = user_proxy_bind(&(struct UserProxy){}, proxy);
-    return userProxy->list(userProxy, out, max);
+    return userProxy->get_users(userProxy, out, max);
 }
 
 static void on_new(const struct IMediator *self, const struct UserVO *user) {
@@ -73,7 +73,7 @@ struct UserListMediator *user_list_mediator_bind(struct UserListMediator *mediat
     mediator->super = super;
 
     mediator->assign = assign;
-    mediator->get_user_list = get_user_list;
+    mediator->get_users = get_users;
     mediator->on_new = on_new;
     mediator->on_delete = on_delete;
     mediator->on_select = on_select;

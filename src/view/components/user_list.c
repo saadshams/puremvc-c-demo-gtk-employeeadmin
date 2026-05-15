@@ -1,4 +1,5 @@
 #include "user_list.h"
+#include "model/valueObject/user_vo.h"
 #include "employee_admin/i_user_list.h"
 
 static struct IUserList delegate;
@@ -138,7 +139,7 @@ GtkWidget *user_list_init() {
 
 void user_list_run() {
     struct UserVO *users[MAX_USERS] = {0};
-    const size_t count = delegate.get_user_list(delegate.context, users, MAX_USERS);
+    const size_t count = delegate.get_users(delegate.context, users, MAX_USERS);
 
     GListStore *store = g_list_store_new(user_vo_object_get_type());
     for (size_t i = 0; i < count; i++) {

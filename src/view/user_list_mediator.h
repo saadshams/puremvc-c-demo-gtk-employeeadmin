@@ -11,7 +11,7 @@ struct UserListMediator {
 
     void (*assign)(const struct UserListMediator *mediator, void *component);
 
-    size_t (*get_user_list)(const struct IMediator *self, struct UserVO **out, size_t max);
+    size_t (*get_users)(const struct IMediator *self, struct UserVO **out, size_t max);
     void (*on_new)(const struct IMediator *self, const struct UserVO *user);
     void (*on_delete)(const struct IMediator *self, struct UserVO *user);
     void (*on_select)(const struct IMediator *self, struct UserVO *user);

@@ -29,7 +29,7 @@ static bool indexOf(const struct UserProxy *self, const char *username, size_t *
     return false;
 }
 
-static size_t list(const struct UserProxy *self, struct UserVO **out, const size_t max) {
+static size_t get_users(const struct UserProxy *self, struct UserVO **out, const size_t max) {
     const struct IProxy *super = self->super;
     struct UserVO *data = super->getData(super);
 
@@ -98,7 +98,7 @@ struct UserProxy *user_proxy_bind(struct UserProxy *proxy, struct IProxy *super)
 
     proxy->count = count;
     proxy->indexOf = indexOf;
-    proxy->list = list;
+    proxy->get_users = get_users;
     proxy->add = add;
     proxy->update = update;
     proxy->delete = delete;
