@@ -14,8 +14,8 @@
 struct ApplicationFacade {
     struct IFacade *super;
 
-    void (*assign)(const struct ApplicationFacade *self, void *component, const char *mediatorName);
     void (*startup)(const struct ApplicationFacade *self, void *body);
+    void (*assign)(const struct ApplicationFacade *self, void *component, const char *mediatorName);
 };
 
 struct IFacade *application_facade_getInstance(struct FacadeMap **facadeMap, const char *key);

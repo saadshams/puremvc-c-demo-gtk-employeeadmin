@@ -28,7 +28,7 @@ struct IFacade *application_facade_getInstance(struct FacadeMap **facadeMap, con
 
 struct ApplicationFacade *application_facade_extend(struct ApplicationFacade *facade, struct IFacade *super) {
     facade->super = super;
-    facade->assign = assign;
     facade->startup = startup;
+    facade->assign = assign;
     return facade;
 }
