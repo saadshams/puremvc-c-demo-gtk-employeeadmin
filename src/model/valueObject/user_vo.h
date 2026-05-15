@@ -8,11 +8,11 @@
 #define MAX_USERS 64
 
 struct UserVO {
-    const char *username;
-    const char *first;
-    const char *last;
-    const char *email;
-    const char *password;
+    char *username;
+    char *first;
+    char *last;
+    char *email;
+    char *password;
     enum DeptEnum department;
 
     bool (*isValid)(const struct UserVO *self, const char *password);
@@ -37,4 +37,4 @@ const char *user_vo_get_last(const struct UserVO *self);
 const char *user_vo_get_email(const struct UserVO *self);
 const char *user_vo_get_department(const struct UserVO *self);
 
-void user_vo_init(struct UserVO *self, const char *username, const char *first, const char *last, const char *email, const char *password, enum DeptEnum department);
+void user_vo_init(struct UserVO *self, char *username, char *first, char *last, char *email, char *password, enum DeptEnum department);

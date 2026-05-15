@@ -29,7 +29,7 @@ static void on_select(GtkSingleSelection *sel, GParamSpec *pspec, gpointer data)
 
     if (position == GTK_INVALID_LIST_POSITION) return;
 
-    const struct UserVO *user = ((UserVOObject *) gtk_single_selection_get_selected_item(sel))->user;
+    struct UserVO *user = ((UserVOObject *) gtk_single_selection_get_selected_item(sel))->user;
     delegate.on_select(delegate.context, user);
 }
 

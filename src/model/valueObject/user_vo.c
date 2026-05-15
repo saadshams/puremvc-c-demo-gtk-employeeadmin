@@ -50,7 +50,7 @@ const char *user_vo_get_department(const struct UserVO *self) {
     return self ? dept_to_string(self->department) : "";
 }
 
-void user_vo_init(struct UserVO *self, const char *username, const char *first, const char *last, const char *email, const char *password, const enum DeptEnum department) {
+void user_vo_init(struct UserVO *self, char *username, char *first, char *last, char *email, char *password, enum DeptEnum department) {
     self->username = username != NULL ? username : "";
     self->first = first != NULL ? first : "";
     self->last = last != NULL ? last : "";

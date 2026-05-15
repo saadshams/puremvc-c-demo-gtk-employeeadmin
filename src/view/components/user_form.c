@@ -4,11 +4,36 @@
 #include "model/enum/dept_enum.h"
 
 static GtkWidget *first, *last, *email, *username, *password, *confirm, *department;
-static const struct UserVO *user;
+static struct UserVO *user;
 static char *confirm_password;
 struct IUserForm delegate;
 
 // Signal handlers
+static void on_update(GtkButton *button, gpointer data) {
+    (void) button; (void) data;
+
+    user->first = g_strdup(gtk_editable_get_text(GTK_EDITABLE(first)));
+    user->last = g_strdup(gtk_editable_get_text(GTK_EDITABLE(last)));
+    user->email = g_strdup(gtk_editable_get_text(GTK_EDITABLE(email)));
+    user->username = g_strdup(gtk_editable_get_text(GTK_EDITABLE(username)));
+    user->password = g_strdup(gtk_editable_get_text(GTK_EDITABLE(password)));
+
+    guint position = gtk_drop_down_get_selected(GTK_DROP_DOWN(department));
+    user->department = position >= DEPT_COMBO_LIST_COUNT ? DEPT_NONE_SELECTED : DEPT_COMBO_LIST[position];
+
+    g_print(
+        "Updated user: %s, %s %s, %s, dept=%d\n",
+        user->username,
+        user->first,
+        user->last,
+        user->email,
+        user->department
+    );
+
+    // if (delegate.on_update) {
+    //     delegate.on_update(delegate.context, user);
+    // }
+}
 static gboolean on_close_request(GtkWindow *window, gpointer data) {
     (void) window; (void) data;
     return FALSE;
@@ -80,6 +105,7 @@ static GtkWidget *footer() {
 
     GtkWidget *update = gtk_button_new_with_label("Update Profile");
     gtk_widget_add_css_class(update, "suggested-action");
+    g_signal_connect(update, "clicked", G_CALLBACK(on_update), NULL);
 
     GtkWidget *cancel = gtk_button_new_with_label("Cancel");
     gtk_widget_set_margin_start(cancel, 5);
@@ -112,9 +138,9 @@ GtkWidget *user_form_init(GtkWidget *window) {
     return frame;
 }
 
-void user_form_set_user(const struct UserVO *_user) {
+void user_form_set_user(struct UserVO *_user) {
     user = _user;
-    confirm_password = (char *) user->password;
+    confirm_password = user->password;
 
     gtk_editable_set_text(GTK_EDITABLE(first), user_vo_get_first(user));
     gtk_editable_set_text(GTK_EDITABLE(last), user_vo_get_last(user));
