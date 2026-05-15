@@ -35,7 +35,7 @@ static size_t get_users(const struct IMediator *self, struct UserVO **out, const
     const struct IFacade *facade = notifier->getFacade(notifier);
 
     struct IProxy *proxy = facade->retrieveProxy(facade, UserProxy_NAME);
-    const struct UserProxy *userProxy = user_proxy_bind(&(struct UserProxy){}, proxy);
+    const struct UserProxy *userProxy = user_proxy_extend(&(struct UserProxy){}, proxy);
     return userProxy->get_users(userProxy, out, max);
 }
 
@@ -69,7 +69,7 @@ struct IMediator *user_list_mediator_init(void *buffer, const char *name, void *
     return mediator;
 }
 
-struct UserListMediator *user_list_mediator_bind(struct UserListMediator *mediator, struct IMediator *super) {
+struct UserListMediator *user_list_mediator_extend(struct UserListMediator *mediator, struct IMediator *super) {
     mediator->super = super;
 
     mediator->assign = assign;

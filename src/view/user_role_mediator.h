@@ -12,4 +12,4 @@ struct UserRoleMediator {
 
 struct IMediator *user_role_mediator_init(void *buffer, const char *name, void *component);
 
-struct UserRoleMediator *user_role_mediator_bind(struct UserRoleMediator *mediator, struct IMediator *super);
+struct UserRoleMediator *user_role_mediator_extend(struct UserRoleMediator *mediator, struct IMediator *super);

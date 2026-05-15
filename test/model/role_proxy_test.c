@@ -46,7 +46,7 @@ void testAddRoles(void) {
     };
 
     struct IProxy *super = role_proxy_init(alloca(puremvc_proxy_size()), "RoleProxyTest", roles);
-    const struct RoleProxy *proxy = role_proxy_bind(&(struct RoleProxy){}, super);
+    const struct RoleProxy *proxy = role_proxy_extend(&(struct RoleProxy){}, super);
 
     proxy->addRoleToUser(proxy, &(struct UserVO) { .username = "lstooge" }, ROLE_ACCT_PAY);
     if (roles[0]->roles[0] != ROLE_PAYROLL) abort();
@@ -65,7 +65,7 @@ void testAddLimit(void) {
     };
 
     struct IProxy *super = role_proxy_init(alloca(puremvc_proxy_size()), "RoleProxyTest", roles);
-    const struct RoleProxy *proxy = role_proxy_bind(&(struct RoleProxy){}, super);
+    const struct RoleProxy *proxy = role_proxy_extend(&(struct RoleProxy){}, super);
 
     proxy->addRoleToUser(proxy, &(struct UserVO) { .username = "sshemp" }, ROLE_PRODUCTION);
     proxy->addRoleToUser(proxy, &(struct UserVO) { .username = "sshemp" }, ROLE_QUALITY_CTL);
@@ -102,7 +102,7 @@ void testRemoveRoles(void) {
     };
 
     struct IProxy *super = role_proxy_init(alloca(puremvc_proxy_size()), "RoleProxyTest", roles);
-    const struct RoleProxy *proxy = role_proxy_bind(&(struct RoleProxy){}, super);
+    const struct RoleProxy *proxy = role_proxy_extend(&(struct RoleProxy){}, super);
 
     proxy->removeRoleFromUser(proxy, &(struct UserVO) { .username = "mstooge" }, ROLE_PRODUCTION);
     if (roles[2]->roles[0] != ROLE_INVENTORY) abort();

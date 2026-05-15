@@ -93,7 +93,7 @@ struct IProxy *user_proxy_init(void *buffer, const char *name, void *data) {
     return proxy;
 }
 
-struct UserProxy *user_proxy_bind(struct UserProxy *proxy, struct IProxy *super) {
+struct UserProxy *user_proxy_extend(struct UserProxy *proxy, struct IProxy *super) {
     proxy->super = super;
 
     proxy->count = count;

@@ -20,4 +20,4 @@ struct ApplicationFacade {
 
 struct IFacade *application_facade_getInstance(struct FacadeMap **facadeMap, const char *key);
 
-struct ApplicationFacade *application_facade_bind(struct ApplicationFacade *facade, struct IFacade *super);
+struct ApplicationFacade *application_facade_extend(struct ApplicationFacade *facade, struct IFacade *super);

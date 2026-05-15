@@ -64,7 +64,7 @@ struct IProxy *role_proxy_init(void *buffer, const char *name, void *data) {
     return proxy;
 }
 
-struct RoleProxy *role_proxy_bind(struct RoleProxy *proxy, struct IProxy *super) {
+struct RoleProxy *role_proxy_extend(struct RoleProxy *proxy, struct IProxy *super) {
     proxy->super = super;
 
     proxy->addItem = addItem;

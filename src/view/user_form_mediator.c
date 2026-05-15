@@ -24,7 +24,7 @@ struct IMediator *user_form_mediator_init(void *buffer, const char *name, void *
     return mediator;
 }
 
-struct UserFormMediator *user_form_mediator_bind(struct UserFormMediator *mediator, struct IMediator *super) {
+struct UserFormMediator *user_form_mediator_extend(struct UserFormMediator *mediator, struct IMediator *super) {
     mediator->super = super;
     mediator->assign = assign;
     return mediator;

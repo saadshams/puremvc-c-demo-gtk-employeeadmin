@@ -19,4 +19,4 @@ struct UserProxy {
 
 struct IProxy *user_proxy_init(void *buffer, const char *name, void *data);
 
-struct UserProxy *user_proxy_bind(struct UserProxy *proxy, struct IProxy *super);
+struct UserProxy *user_proxy_extend(struct UserProxy *proxy, struct IProxy *super);

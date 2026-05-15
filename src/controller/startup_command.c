@@ -21,7 +21,7 @@ static void execute(const struct ICommand *self, struct INotification *notificat
     facade->registerProxy(facade, role_proxy_init, RoleProxy_NAME, body[1]);
 
     struct IProxy *super = facade->retrieveProxy(facade, UserProxy_NAME);
-    struct UserProxy *user_proxy = user_proxy_bind(&(struct UserProxy) {}, super);
+    struct UserProxy *user_proxy = user_proxy_extend(&(struct UserProxy) {}, super);
 
     user_proxy->add(user_proxy, &(struct UserVO) { .username = "lstooge", .first = "Larry", .last = "Stooge",
         .email = "larry@stooges.com", .password = "ijk456", .department = DEPT_ACCT });
