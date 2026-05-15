@@ -8,17 +8,20 @@ static GtkWidget *delete;
 
 // Signal handlers
 static void on_new(GtkButton *button, gpointer data) {
+    (void) button; (void) data;
     gtk_single_selection_set_selected(selection, GTK_INVALID_LIST_POSITION);
     delegate.on_new(delegate.context, NULL);
 }
 
 static void on_delete(GtkButton *button, gpointer data) {
+    (void) button; (void) data;
     UserVOObject *object = gtk_single_selection_get_selected_item(selection);
-    const struct UserVO *user = object->user;
+    struct UserVO *user = object->user;
     delegate.on_delete(delegate.context, user);
 }
 
 static void on_select(GtkSingleSelection *sel, GParamSpec *pspec, gpointer data) {
+    (void) pspec; (void) data;
     guint position = gtk_single_selection_get_selected(sel);
     gtk_widget_set_sensitive(delete, position != GTK_INVALID_LIST_POSITION);
 
@@ -30,13 +33,15 @@ static void on_select(GtkSingleSelection *sel, GParamSpec *pspec, gpointer data)
 
 // UI helpers
 static void setup(GtkSignalListItemFactory *factory, GtkListItem *list_item, gpointer data) {
+    (void) factory; (void) data;
     GtkWidget *label = gtk_label_new("");
     gtk_label_set_xalign(GTK_LABEL(label), 0.0);
     gtk_widget_set_halign(label, GTK_ALIGN_START);
     gtk_list_item_set_child(list_item, label);
 }
 
-static void bind(GtkSignalListItemFactory *factory, GtkListItem *list_item, gpointer data) {
+static void bind(const GtkSignalListItemFactory *factory, GtkListItem *list_item, gpointer data) {
+    (void) factory;
     GtkWidget *label = gtk_list_item_get_child(list_item);
     const UserVOObject *object = gtk_list_item_get_item(list_item);
 

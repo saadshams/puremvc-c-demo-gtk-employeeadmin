@@ -2,12 +2,14 @@
 
 #include <puremvc/puremvc.h>
 
-#define VERSION "EmployeeAdmin Version 1.0.0"
 #define STARTUP "startup"
 #define REGISTER "register"
-#define SERVICE "service"
-#define SERVICE_RESULT "service_result"
-#define SERVICE_FAULT "service_fault"
+
+#define NEW_USER "newUser"
+#define DELETE_USER "deleteUser"
+#define USER_SELECTED "userSelected"
+
+#define CANCEL_SELECTED "cancelSelected"
 
 struct ApplicationFacade {
     struct IFacade *super;

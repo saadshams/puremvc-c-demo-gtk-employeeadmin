@@ -9,11 +9,12 @@
 struct UserListMediator {
     struct IMediator *super;
 
-    size_t (*get_user_list)(const struct UserListMediator *self, struct UserVO **out, size_t max);
-    void (*on_new)(const struct UserListMediator *self, const struct UserVO *user);
-    void (*on_delete)(const struct UserListMediator *self, const struct UserVO *user);
-    void (*on_select)(const struct UserListMediator *self, const struct UserVO *user);
     void (*registerComponent)(const struct UserListMediator *mediator, void *component);
+
+    size_t (*get_user_list)(const struct IMediator *self, struct UserVO **out, size_t max);
+    void (*on_new)(const struct IMediator *self, const struct UserVO *user);
+    void (*on_delete)(const struct IMediator *self, struct UserVO *user);
+    void (*on_select)(const struct IMediator *self, struct UserVO *user);
 };
 
 struct IMediator *user_list_mediator_init(void *buffer, const char *name, void *component);
