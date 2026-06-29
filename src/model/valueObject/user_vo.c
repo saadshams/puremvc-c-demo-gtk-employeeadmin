@@ -34,7 +34,7 @@ static bool validate(GtkWidget *username, GtkWidget *password, GtkWidget *confir
     return isValid;
 }
 
-static const char *givenName(const struct UserVO *self, char *buffer, size_t buffer_size) {
+static const char *given_name(const struct UserVO *self, char *buffer, size_t buffer_size) {
     if (self == NULL || buffer == NULL || buffer_size == 0) return NULL;
 
     snprintf(buffer, buffer_size, "%s, %s", self->last, self->first);
@@ -77,16 +77,68 @@ const char *user_vo_get_department(const struct UserVO *self) {
     return self ? dept_to_string(self->department) : "";
 }
 
-struct UserVO *user_vo_init(struct UserVO *self, char *username, char *first, char *last, char *email, char *password, enum DeptEnum department) {
-    self->username = username != NULL ? username : "";
-    self->first = first != NULL ? first : "";
-    self->last = last != NULL ? last : "";
-    self->email = email != NULL ? email : "";
-    self->password = password != NULL ? password : "";
-    self->department = department;
+static size_t size(void) {
+    return (sizeof(struct UserVO) + (sizeof(void *) - 1u)) & ~(sizeof(void *) - 1u);
+}
 
-    self->validate = validate;
-    self->givenName = givenName;
+static struct UserVO *alloc(void) {
+    struct UserVO *user_vo = malloc(size());
 
-    return self;
+    if (user_vo == NULL) {
+        fprintf(stderr, "\033[0;31m[EmployeeAdmin::UserVO::alloc] ERROR: Instance allocation failed.\033[0m\n");
+        return NULL;
+    }
+
+    return user_vo;
+}
+
+static struct UserVO *init(struct UserVO *user_vo, char *username, char *first, char *last, char *email, char *password, enum DeptEnum department) {
+    if (user_vo == NULL) return NULL;
+
+    struct UserVO *this = user_vo;
+    memset(this, 0, size());
+
+    this->username = strdup(username != NULL ? username : "");
+    if (this->username == NULL) goto exception;
+
+    this->first = first != NULL ? first : "";
+    if (this->first == NULL) goto exception;
+
+    this->last = last != NULL ? last : "";
+    if (this->last == NULL) goto exception;
+
+    this->email = email != NULL ? email : "";
+    if (this->email == NULL) goto exception;
+
+    this->password = password != NULL ? password : "";
+    if (this->password == NULL) goto exception;
+
+    this->department = department;
+
+    this->validate = validate;
+    this->given_name = given_name;
+
+    return this;
+
+exception:
+    user_vo_dealloc(&this);
+    return NULL;
+}
+
+struct UserVO *user_vo_new(char *username, char *first, char *last, char *email, char *password, enum DeptEnum department) {
+    return init(alloc(), username, first, last, email, password, department);
+}
+
+void user_vo_dealloc(struct UserVO **user_vo) {
+    if (user_vo == NULL || *user_vo == NULL) return;
+    const struct UserVO *this = *user_vo;
+
+    free(this->username);
+    free(this->first);
+    free(this->last);
+    free(this->email);
+    free(this->password);
+
+    free(*user_vo);
+    *user_vo = NULL;
 }

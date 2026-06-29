@@ -1,5 +1,4 @@
 #pragma once
 
-void testAddRoles(void);
-void testAddLimit(void);
-void testRemoveRoles(void);
+void test_add_roles(void);
+void test_remove_roles(void);

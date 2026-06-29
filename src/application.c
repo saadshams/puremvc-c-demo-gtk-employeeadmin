@@ -11,7 +11,7 @@
 static GtkWidget *master(GtkWidget *window, gpointer data) {
     const struct ApplicationFacade *facade = data;
     GtkWidget *user = user_list_init(window);
-    facade->assign(facade, user, UserListMediator_NAME);
+    facade->set_component(facade, user, UserListMediator_NAME);
     return user;
 }
 
@@ -22,10 +22,10 @@ static GtkWidget *detail(GtkWidget *window, gpointer data) {
     gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
 
     GtkWidget *form = user_form_init(window);
-    facade->assign(facade, form, UserFormMediator_NAME);
+    facade->set_component(facade, form, UserFormMediator_NAME);
 
     GtkWidget *role = user_role_init(window);
-    facade->assign(facade, role, UserRoleMediator_NAME);
+    facade->set_component(facade, role, UserRoleMediator_NAME);
 
     gtk_widget_set_hexpand(form, TRUE);
     gtk_widget_set_hexpand(role, TRUE);
@@ -83,7 +83,7 @@ static void activate(GtkApplication *app, gpointer data) {
     load_css();
 }
 
-GtkApplication *getApp(gpointer data) {
+GtkApplication *get_app(gpointer data) {
     GtkApplication *app = gtk_application_new("org.puremvc.employeeadmin", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), data);
     return app;

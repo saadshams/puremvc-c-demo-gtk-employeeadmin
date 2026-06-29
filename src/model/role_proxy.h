@@ -11,11 +11,12 @@
 struct RoleProxy {
     struct IProxy *super;
 
-    void (*addItem)(const struct RoleProxy *self, struct RoleVO *role);
-    void (*addRoleToUser)(const struct RoleProxy *self, const struct UserVO *user, enum RoleEnum role);
-    void (*removeRoleFromUser)(const struct RoleProxy *self, const struct UserVO *user, enum RoleEnum role);
+    struct IArray *(*find_all)(const struct RoleProxy *self);
+    void (*add_item)(const struct RoleProxy *self, struct RoleVO *role);
+    void (*add_role_to_user)(const struct RoleProxy *self, const struct UserVO *user, enum RoleEnum role);
+    void (*remove_role_from_user)(const struct RoleProxy *self, const struct UserVO *user, enum RoleEnum role);
 };
 
-struct IProxy *role_proxy_init(void *buffer, const char *name, void *data);
+struct RoleProxy *role_proxy_new();
 
-struct RoleProxy *role_proxy_extend(struct RoleProxy *proxy, struct IProxy *super);
+void role_proxy_dealloc(struct RoleProxy **proxy);

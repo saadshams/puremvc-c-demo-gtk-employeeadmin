@@ -17,10 +17,10 @@
 struct ApplicationFacade {
     struct IFacade *super;
 
-    void (*startup)(const struct ApplicationFacade *self, void *body);
-    void (*assign)(const struct ApplicationFacade *self, void *component, const char *mediatorName);
+    void (*startup)(const struct ApplicationFacade *self);
+    void (*set_component)(const struct ApplicationFacade *self, void *component, const char *mediatorName);
 };
 
-struct IFacade *application_facade_getInstance(struct FacadeMap **facadeMap, const char *key);
+struct IFacade *application_facade_getInstance(const char *key);
 
 struct ApplicationFacade *application_facade_extend(struct ApplicationFacade *facade, struct IFacade *super);

@@ -2,4 +2,4 @@
 
 #include <gtk/gtk.h>
 
-GtkApplication *getApp(gpointer data);
+GtkApplication *get_app(gpointer data);

@@ -9,10 +9,10 @@
 struct UserFormMediator {
     struct IMediator *super;
 
-    void (*assign)(const struct UserFormMediator *mediator, void *component);
+    void (*set_component)(const struct UserFormMediator *mediator, void *component);
     void (*on_update)(const struct IMediator *self, struct UserVO *user);
 };
 
-struct IMediator *user_form_mediator_init(void *buffer, const char *name, void *component);
+struct IMediator *user_form_mediator_new();
 
 struct UserFormMediator *user_form_mediator_extend(struct UserFormMediator *mediator, struct IMediator *super);

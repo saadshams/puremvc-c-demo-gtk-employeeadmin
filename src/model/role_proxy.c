@@ -3,73 +3,136 @@
 #include "model/valueObject/role_vo.h"
 
 #include <string.h>
+#include <collection/i_array.h>
 
-static void addItem(const struct RoleProxy *self, struct RoleVO *role) {
+static void on_register(struct IProxy *self) {
+    (void) self;
+}
+
+static void on_remove(struct IProxy *self) {
+    (void) self;
+}
+
+static struct IArray *find_all(const struct RoleProxy *self) {
     const struct IProxy *super = self->super;
-    struct RoleVO **data = super->getData(super);
+    return super->get_data(super);
+}
 
-    for (size_t i = 0; i < MAX_USERS - 1; i++) {
-        if (data[i] == NULL) {
-            data[i] = role;
-            break;
+static void add_item(const struct RoleProxy *self, struct RoleVO *role) {
+    const struct IProxy *super = self->super;
+    struct IArray *roles = super->get_data(super);
+
+    roles->push(roles, role);
+}
+
+static void add_role_to_user(const struct RoleProxy *self, const struct UserVO *user, const enum RoleEnum role) {
+    const struct IProxy *super = self->super;
+    const struct IArray *role_vos = super->get_data(super);
+
+    for (size_t i = 0, size = role_vos->count(role_vos); i < size; i++) {
+        const struct RoleVO *role_vo = role_vos->get(role_vos, i);
+
+        if (strcmp(role_vo->username, user->username) != 0)
+            continue;
+
+        const struct IArray *roles = role_vo->roles;
+        for (size_t j = 0; j < roles->count(roles); ++j) { // existing
+            const enum RoleEnum *stored = roles->get(roles, j);
+            if (*stored == role) return;
         }
+
+        enum RoleEnum *value = malloc(sizeof(enum RoleEnum)); // save
+        if (!value) {
+            fprintf(stderr, "\033[0;31m[EmployeeAdmin::RoleEnum::alloc] ERROR: Instance allocation failed.\033[0m\n");
+            return;
+        }
+
+        *value = role;
+        role_vo->roles->push(role_vo->roles, value);
+
+        break;
     }
 }
 
-static void addRoleToUser(const struct RoleProxy *self, const struct UserVO *user, const enum RoleEnum role) {
+static void remove_role_from_user(const struct RoleProxy *self, const struct UserVO *user, const enum RoleEnum role) {
     const struct IProxy *super = self->super;
-    struct RoleVO **data = super->getData(super);
+    const struct IArray *role_vos = super->get_data(super);
 
-    for (size_t i = 0; data[i] != NULL; i++) {
-        if (strcmp(data[i]->username, user->username) == 0) {
+    for (size_t i = 0, count = role_vos->count(role_vos); i < count; i++) {
+        const struct RoleVO *role_vo = role_vos->get(role_vos, i);
 
-            for (size_t j = 0; j < MAX_ROLES; j++) { // existing
-                if (data[i]->roles[j] == role) return;
-            }
+        if (strcmp(role_vo->username, user->username) != 0)
+            continue;
 
-            for (size_t j = 0; j < MAX_ROLES - 1; j++) { // keep terminator
-                if (data[i]->roles[j] == ROLE_NONE_SELECTED) {
-                    data[i]->roles[j] = role;
-                    return;
-                }
+        struct IArray *roles = role_vo->roles;
+
+        for (size_t j = 0; j < roles->count(roles); j++) { // existing
+            const enum RoleEnum *stored = roles->get(roles, j);
+            if (*stored == role) {
+                roles->remove_item(roles, stored);
+                free((void *) stored);
+                return;
             }
         }
+
+        break;
     }
 }
 
-static void removeRoleFromUser(const struct RoleProxy *self, const struct UserVO *user, const enum RoleEnum role) {
-    const struct IProxy *super = self->super;
-    struct RoleVO **data = super->getData(super);
-
-    for (size_t i = 0; data[i] != NULL; i++) {
-        if (strcmp(data[i]->username, user->username) == 0) {
-            size_t index = 0;
-            for (size_t j = 0; j < MAX_ROLES && data[i]->roles[j] != ROLE_NONE_SELECTED; j++) {
-                if (data[i]->roles[j] == role) {
-
-                } else {
-                    if (index != j)
-                        data[i]->roles[index] = data[i]->roles[j]; // shift left
-                    index++;
-                }
-            }
-            data[i]->roles[index] = ROLE_NONE_SELECTED;
-            break;
-        }
-    }
+static size_t size(void) {
+    return (sizeof(struct RoleProxy) + (sizeof(void *) - 1u)) & ~(sizeof(void *) - 1u);
 }
 
-struct IProxy *role_proxy_init(void *buffer, const char *name, void *data) {
-    struct IProxy *proxy = puremvc_proxy_init(buffer, name, data);
+static struct RoleProxy *alloc(void) {
+    struct RoleProxy *proxy = malloc(size());
+
+    if (proxy == NULL) {
+        fprintf(stderr, "\033[0;31m[EmployeeAdmin::RoleProxy::alloc] ERROR: Instance allocation failed.\033[0m\n");
+        return NULL;
+    }
+
     return proxy;
 }
 
-struct RoleProxy *role_proxy_extend(struct RoleProxy *proxy, struct IProxy *super) {
+static struct RoleProxy *init(struct RoleProxy *proxy) {
+    if (proxy == NULL) return NULL;
+
+    proxy->find_all = find_all;
+    proxy->add_item = add_item;
+    proxy->add_role_to_user = add_role_to_user;
+    proxy->remove_role_from_user = remove_role_from_user;
+
+    return proxy;
+}
+
+struct RoleProxy *role_proxy_new() {
+    struct IProxy *super = puremvc_proxy_new(RoleProxy_NAME, collection_array_new());
+    if (super == NULL) return NULL;
+
+    struct RoleProxy *proxy = init(alloc());
+    if (proxy == NULL) {
+        puremvc_proxy_dealloc(&super);
+        return NULL;
+    }
+
     proxy->super = super;
+    proxy->super->on_register = on_register;
+    proxy->super->on_remove = on_remove;
 
-    proxy->addItem = addItem;
-    proxy->addRoleToUser = addRoleToUser;
-    proxy->removeRoleFromUser = removeRoleFromUser;
+    proxy->super->instance = proxy;
 
     return proxy;
+}
+
+void role_proxy_dealloc(struct RoleProxy **proxy) {
+    if (proxy == NULL || *proxy == NULL) return;
+
+    struct IProxy *super = (*proxy)->super;
+    struct IArray *data = super->get_data(super);
+    collection_array_dealloc(&data, free);
+
+    puremvc_proxy_dealloc(&super);
+
+    free(*proxy);
+    *proxy = NULL;
 }

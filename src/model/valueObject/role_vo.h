@@ -1,12 +1,12 @@
 #pragma once
 
-#include "model/enum/role_enum.h"
-
-#define MAX_ROLES 15
+#include "collection/i_array.h"
 
 struct RoleVO {
-    const char *username;
-    enum RoleEnum roles[MAX_ROLES];
+    char *username;
+    struct IArray *roles;
 };
 
-void role_vo_init(struct RoleVO *self, const char *username, const enum RoleEnum *roles);
+struct RoleVO *role_vo_new(char *username);
+
+void role_vo_dealloc(struct RoleVO **role_vo);

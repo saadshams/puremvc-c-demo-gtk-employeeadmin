@@ -15,9 +15,9 @@ struct UserVO {
     char *password;
     enum DeptEnum department;
 
-    bool (*isValid)(const struct UserVO *self, const char *password);
+    bool (*is_valid)(const struct UserVO *self, const char *password);
     bool (*validate)(GtkWidget *username, GtkWidget *password, GtkWidget *confirm, GtkWidget *department);
-    const char *(*givenName)(const struct UserVO *self, char *buffer, size_t buffer_size);
+    const char *(*given_name)(const struct UserVO *self, char *buffer, size_t buffer_size);
 };
 
 typedef struct {
@@ -38,4 +38,6 @@ const char *user_vo_get_last(const struct UserVO *self);
 const char *user_vo_get_email(const struct UserVO *self);
 const char *user_vo_get_department(const struct UserVO *self);
 
-struct UserVO *user_vo_init(struct UserVO *self, char *username, char *first, char *last, char *email, char *password, enum DeptEnum department);
+struct UserVO *user_vo_new(char *username, char *first, char *last, char *email, char *password, enum DeptEnum department);
+
+void user_vo_dealloc(struct UserVO **user_vo);

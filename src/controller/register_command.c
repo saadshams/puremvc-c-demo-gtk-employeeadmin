@@ -6,27 +6,27 @@
 #include <string.h>
 
 static void execute(const struct ICommand *self, struct INotification *notification) {
-    const struct INotifier *notifier = self->getNotifier(self);
-    const struct IFacade *facade = notifier->getFacade(notifier);
+    const struct INotifier *notifier = self->get_notifier(self);
+    const struct IFacade *facade = notifier->get_facade(notifier);
 
-    void *component = notification->getBody(notification);
-    const char *mediatorName = notification->getType(notification);
+    void *component = notification->get_body(notification);
+    const char *mediatorName = notification->get_type(notification);
 
-    struct IMediator *super = facade->retrieveMediator(facade, mediatorName);
-    if (strcmp(mediatorName, UserListMediator_NAME) == 0) { // register delegate within mediator scope
+    struct IMediator *super = facade->retrieve_mediator(facade, mediatorName);
+    if (strcmp(mediatorName, UserListMediator_NAME) == 0) {
         const struct UserListMediator *mediator = user_list_mediator_extend(&(struct UserListMediator){}, super);
-        mediator->assign(mediator, component);
+        mediator->set_component(mediator, component);
     } else if (strcmp(mediatorName, UserFormMediator_NAME) == 0) {
         const struct UserFormMediator *mediator = user_form_mediator_extend(&(struct UserFormMediator){}, super);
-        mediator->assign(mediator, component);
+        mediator->set_component(mediator, component);
     } else if (strcmp(mediatorName, UserRoleMediator_NAME) == 0) {
         const struct UserRoleMediator *mediator = user_role_mediator_extend(&(struct UserRoleMediator){}, super);
-        mediator->assign(mediator, component);
+        mediator->set_component(mediator, component);
     }
 }
 
-struct ICommand *register_command_init(void *buffer) {
-    struct ICommand *command = puremvc_simple_command_init(buffer);
+struct ICommand *register_command_new() {
+    struct ICommand *command = puremvc_command_new();
     command->execute = execute; // override
     return command;
 }

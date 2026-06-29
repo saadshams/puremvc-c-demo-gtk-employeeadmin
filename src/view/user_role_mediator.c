@@ -1,31 +1,31 @@
 #include "user_role_mediator.h"
 #include "components/user_role.h"
 
-static const char *const *listNotificationInterests(const struct IMediator *self) {
+static const char *const *list_notification_interests(const struct IMediator *self) {
     (void) self;
     static const char *interests[] = { NULL };
     return interests;
 }
 
-static void handleNotification(const struct IMediator *self, struct INotification *notification) {
+static void handle_notification(const struct IMediator *self, struct INotification *notification) {
 
 }
 
-static void assign(const struct UserRoleMediator *mediator, void *component) {
+static void set_component(const struct UserRoleMediator *mediator, void *component) {
     struct IMediator *self = mediator->super;
-    self->setComponent(self, component);
+    self->set_component(self, component);
     user_role_set_delegate((struct IUserRole) { .context = self } );
 }
 
-struct IMediator *user_role_mediator_init(void *buffer, const char *name, void *component) {
-    struct IMediator *mediator = puremvc_mediator_init(buffer, name, component);
-    mediator->listNotificationInterests = listNotificationInterests;
-    mediator->handleNotification = handleNotification;
+struct IMediator *user_role_mediator_new() {
+    struct IMediator *mediator = puremvc_mediator_new(UserRoleMediator_NAME, NULL);
+    mediator->list_notification_interests = list_notification_interests;
+    mediator->handle_notification = handle_notification;
     return mediator;
 }
 
 struct UserRoleMediator *user_role_mediator_extend(struct UserRoleMediator *mediator, struct IMediator *super) {
     mediator->super = super;
-    mediator->assign = assign;
+    mediator->set_component = set_component;
     return mediator;
 }

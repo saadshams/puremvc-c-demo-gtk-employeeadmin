@@ -1,107 +1,118 @@
 #include "user_proxy.h"
 
-#include <string.h>
+#include <collection/i_array.h>
 
-static size_t count(const struct UserProxy *self) {
-    const struct IProxy *super = self->super;
-    const struct UserVO *data = super->getData(super);
-
-    size_t total = 0;
-    for (size_t i = 0; i < MAX_USERS; i++) {
-        if (data[i].username == NULL || data[i].username[0] == '\0')
-            break;
-        total++;
-    }
-    return total;
+static void on_register(struct IProxy *self) {
+    (void) self;
 }
 
-static bool indexOf(const struct UserProxy *self, const char *username, size_t *out) {
-    const struct IProxy *super = self->super;
-    const struct UserVO *data = super->getData(super);
-
-    const size_t count = self->count(self);
-    for (size_t i = 0; i < count; i++) {
-        if (strcmp(data[i].username, username) == 0) { // match
-            if (out) *out = i;
-            return true;
-        }
-    }
-    return false;
+static void on_remove(struct IProxy *self) {
+    (void) self;
 }
 
-static size_t get_users(const struct UserProxy *self, struct UserVO **out, const size_t max) {
-    const struct IProxy *super = self->super;
-    struct UserVO *data = super->getData(super);
-
-    const size_t count = self->count(self);
-    const size_t total = count < max ? count : max; // max = caller buffer capacity
-    for (size_t i = 0; i < total; i++) {
-        out[i] = &data[i];
-    }
-    return total;
+static bool comparator(const void *element, const void *item) {
+    return strcmp(((struct UserVO *) element)->username, ((struct UserVO *) item)->username) == 0;
 }
 
-static bool add(const struct UserProxy *self, const struct UserVO *user) {
+static struct IArray *find_all(const struct UserProxy *self) {
     const struct IProxy *super = self->super;
-    struct UserVO *data = super->getData(super);
+    return super->get_data(super);;
+}
 
-    const size_t count = self->count(self);
-    if (count >= MAX_USERS) return false; // overflow
+static bool save(const struct UserProxy *self, const struct UserVO *user) {
+    const struct IProxy *super = self->super;
+    struct IArray *users = super->get_data(super);
 
-    size_t index = 0;
-    if (self->indexOf(self, user->username, &index) == true) // existing
+    if (users->find(users, comparator, user) != NULL)
         return false;
 
-    data[count] = *user;
-
+    users->push(users, user);
     return true;
 }
 
 static bool update(const struct UserProxy *self, const struct UserVO *user) {
     const struct IProxy *super = self->super;
-    struct UserVO *data = super->getData(super);
+    struct IArray *users = super->get_data(super);
 
-    size_t index;
-    if (self->indexOf(self, user->username, &index) == false) // find
-        return false; // mismatch
+    const size_t index = users->first_index(users, comparator, user);;
+    if (index == SIZE_MAX) return false;
 
-    data[index] = *user;
+    struct UserVO *existing = users->put(users, user, index);
+    free(existing);
+
     return true;
 }
 
-static bool delete(const struct UserProxy *self, const struct UserVO *user, struct UserVO *out) {
+static bool delete(const struct UserProxy *self, const struct UserVO *user) {
     const struct IProxy *super = self->super;
-    struct UserVO *data = super->getData(super);
+    struct IArray *users = super->get_data(super);
 
-    size_t index;
-    if (self->indexOf(self, user->username, &index) == false) // find
-        return false; // mismatch
-
-    if (out != NULL) *out = data[index];
-
-    const size_t count = self->count(self);
-    for (size_t i = index; i < count - 1; i++) { // shift left
-        data[i] = data[i + 1];
+    struct UserVO *removed = users->remove_item(users, user);
+    if (removed != NULL) {
+        free(removed);
+        return true;
     }
-    data[count - 1] = (struct UserVO){0};
 
-    return true;
+    return false;
 }
 
-struct IProxy *user_proxy_init(void *buffer, const char *name, void *data) {
-    struct IProxy *proxy = puremvc_proxy_init(buffer, name, data);
+static size_t size(void) {
+    return (sizeof(struct UserProxy) + (sizeof(void *) - 1u)) & ~(sizeof(void *) - 1u);
+}
+
+static struct UserProxy *alloc(void) {
+    struct UserProxy *proxy = malloc(size());
+
+    if (proxy == NULL) {
+        fprintf(stderr, "\033[0;31m[EmployeeAdmin::UserProxy::alloc] ERROR: Instance allocation failed.\033[0m\n");
+        return NULL;
+    }
+
     return proxy;
 }
 
-struct UserProxy *user_proxy_extend(struct UserProxy *proxy, struct IProxy *super) {
-    proxy->super = super;
+static struct UserProxy *init(struct UserProxy *proxy) {
+    if (proxy == NULL) return NULL;
 
-    proxy->count = count;
-    proxy->indexOf = indexOf;
-    proxy->get_users = get_users;
-    proxy->add = add;
+    memset(proxy, 0, size());
+
+    proxy->find_all = find_all;
+    proxy->save = save;
     proxy->update = update;
     proxy->delete = delete;
 
     return proxy;
+}
+
+struct UserProxy *user_proxy_new(void) {
+    struct IProxy *super = puremvc_proxy_new(UserProxy_NAME, collection_array_new());
+    if (super == NULL) return NULL;
+
+    struct UserProxy *proxy = init(alloc());
+    if (proxy == NULL) {
+        puremvc_proxy_dealloc(&super);
+        return NULL;
+    }
+
+    proxy->super = super;
+    proxy->super->on_register = on_register;
+    proxy->super->on_remove = on_remove;
+
+    proxy->super->instance = proxy;
+
+    return proxy;
+}
+
+void user_proxy_dealloc(struct UserProxy **proxy) {
+    if (proxy == NULL || *proxy == NULL) return;
+
+    struct IProxy *super = (*proxy)->super;
+    struct IArray *data = super->get_data(super);
+    collection_array_dealloc(&data, free);
+
+    super->instance = NULL;
+    puremvc_proxy_dealloc(&super);
+
+    free(*proxy);
+    *proxy = NULL;
 }

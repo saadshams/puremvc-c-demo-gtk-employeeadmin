@@ -3,20 +3,21 @@
 #include "model/valueObject/user_vo.h"
 
 #include <puremvc/puremvc.h>
+#include <collection/i_array.h>
 
 #define UserListMediator_NAME "UserListMediator"
 
 struct UserListMediator {
     struct IMediator *super;
 
-    void (*assign)(const struct UserListMediator *mediator, void *component);
+    void (*set_component)(const struct UserListMediator *mediator, void *component);
 
-    size_t (*get_users)(const struct IMediator *self, struct UserVO **out, size_t max);
+    struct IArray *(*find_all)(const struct IMediator *self);
     void (*on_new)(const struct IMediator *self, const struct UserVO *user);
     void (*on_delete)(const struct IMediator *self, struct UserVO *user);
     void (*on_select)(const struct IMediator *self, struct UserVO *user);
 };
 
-struct IMediator *user_list_mediator_init(void *buffer, const char *name, void *component);
+struct IMediator *user_list_mediator_new();
 
 struct UserListMediator *user_list_mediator_extend(struct UserListMediator *mediator, struct IMediator *super);

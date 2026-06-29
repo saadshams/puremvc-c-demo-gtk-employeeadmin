@@ -59,10 +59,17 @@ static void setup(GtkSignalListItemFactory *factory, GtkListItem *list_item, gpo
 
 static void bind(const GtkSignalListItemFactory *factory, GtkListItem *list_item, gpointer data) {
     (void) factory;
+
     GtkWidget *label = gtk_list_item_get_child(list_item);
     const UserVOObject *object = gtk_list_item_get_item(list_item);
 
     const char *(*getter)(const struct UserVO *user) = data;
+
+    if (!object || !object->user || !getter) {
+        gtk_label_set_text(GTK_LABEL(label), "");
+        return;
+    }
+
     gtk_label_set_text(GTK_LABEL(label), getter(object->user));
 }
 
@@ -157,13 +164,14 @@ GtkWidget *user_list_init(GtkWidget *window) {
 }
 
 void user_list_run() {
-    struct UserVO *users[MAX_USERS] = {0};
-    const size_t count = delegate.get_users(delegate.context, users, MAX_USERS);
+    const struct IArray *users = delegate.find_all(delegate.context);
+    const size_t count = users->count(users);
 
     store = g_list_store_new(user_vo_object_get_type());
 
     for (size_t i = 0; i < count; i++) {
-        UserVOObject *object = user_vo_object_new(users[i]);
+        UserVOObject *object = user_vo_object_new(users->get(users, i));
+
         g_list_store_append(store, object);
         g_object_unref(object);
     }
@@ -179,7 +187,7 @@ void user_list_run() {
 }
 
 void user_list_refresh(const struct UserVO *user) {
-    guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
+    const guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
 
     for (guint i = 0; i < count; i++) {
         UserVOObject *object = g_list_model_get_item(G_LIST_MODEL(store), i);

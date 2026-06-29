@@ -7,9 +7,9 @@
 struct UserRoleMediator {
     struct IMediator *super;
 
-    void (*assign)(const struct UserRoleMediator *mediator, void *component);
+    void (*set_component)(const struct UserRoleMediator *mediator, void *component);
 };
 
-struct IMediator *user_role_mediator_init(void *buffer, const char *name, void *component);
+struct IMediator *user_role_mediator_new();
 
 struct UserRoleMediator *user_role_mediator_extend(struct UserRoleMediator *mediator, struct IMediator *super);

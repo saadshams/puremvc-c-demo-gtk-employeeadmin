@@ -12,39 +12,37 @@
 #include <puremvc/puremvc.h>
 
 static void execute(const struct ICommand *self, struct INotification *notification) {
-    const struct INotifier *notifier = self->getNotifier(self);
-    const struct IFacade *facade = notifier->getFacade(notifier);
-    void **body = notification->getBody(notification);
+    const struct INotifier *notifier = self->get_notifier(self);
+    const struct IFacade *facade = notifier->get_facade(notifier);
 
-    facade->registerCommand(facade, REGISTER, register_command_init);
-    facade->registerProxy(facade, user_proxy_init, UserProxy_NAME, body[0]);
-    facade->registerProxy(facade, role_proxy_init, RoleProxy_NAME, body[1]);
+    facade->register_command(facade, REGISTER, register_command_new);
 
-    struct IProxy *super = facade->retrieveProxy(facade, UserProxy_NAME);
-    struct UserProxy *user_proxy = user_proxy_extend(&(struct UserProxy) {}, super);
+    const struct UserProxy *user_proxy = user_proxy_new();
+    facade->register_proxy(facade, user_proxy->super);
 
+    struct RoleProxy *role_proxy = role_proxy_new();
+    facade->register_proxy(facade, role_proxy->super);
 
-    user_proxy->add(user_proxy, user_vo_init(&(struct UserVO) {}, "lstooge", "Larry", "Stooge",
+    user_proxy->save(user_proxy, user_vo_new("lstooge", "Larry", "Stooge",
         "larry@stooges.com", "ijk456", DEPT_ACCT));
-    user_proxy->add(user_proxy, user_vo_init(&(struct UserVO) {}, "cstooge", "Curly", "Stooge",
+    user_proxy->save(user_proxy, user_vo_new("cstooge", "Curly", "Stooge",
     "curly@stooges.com", "xyz987", DEPT_SALES));
-    user_proxy->add(user_proxy, user_vo_init(&(struct UserVO) {}, "mstooge", "Moe", "Stooge",
+    user_proxy->save(user_proxy, user_vo_new("mstooge", "Moe", "Stooge",
      "moe@stooges.com", "abc123", DEPT_PLANT));
 
-    const struct RoleProxy *role_proxy = (struct RoleProxy *) facade->retrieveProxy(facade, RoleProxy_NAME);
-    role_proxy->addItem(role_proxy, &(struct RoleVO) { .username = "lstooge", .roles = {ROLE_PAYROLL} });
-    role_proxy->addItem(role_proxy, &(struct RoleVO) { .username = "cstooge", .roles = {ROLE_ACCT_PAY,
-        ROLE_ACCT_RCV, ROLE_GEN_LEDGER} });
-    role_proxy->addItem(role_proxy, &(struct RoleVO) { .username = "cstooge", .roles = {ROLE_INVENTORY,
-        ROLE_PRODUCTION, ROLE_SALES, ROLE_SHIPPING} });
+    // role_proxy->add_item(role_proxy, role_vo_new("lstooge", (enum RoleEnum[]) {ROLE_PAYROLL, ROLE_NONE_SELECTED}));
+    // role_proxy->add_item(role_proxy, role_vo_new("cstooge", (enum RoleEnum[]) {ROLE_ACCT_PAY,
+        // ROLE_ACCT_RCV, ROLE_GEN_LEDGER, ROLE_NONE_SELECTED}));
+    // role_proxy->add_item(role_proxy, role_vo_new("cstooge", (enum RoleEnum[]) {ROLE_INVENTORY,
+        // ROLE_PRODUCTION, ROLE_SALES, ROLE_SHIPPING, ROLE_NONE_SELECTED}));
 
-    facade->registerMediator(facade, user_list_mediator_init, UserListMediator_NAME, NULL);
-    facade->registerMediator(facade, user_form_mediator_init, UserFormMediator_NAME, NULL);
-    facade->registerMediator(facade, user_role_mediator_init, UserRoleMediator_NAME, NULL);
+    facade->register_mediator(facade, user_list_mediator_new());
+    facade->register_mediator(facade, user_form_mediator_new());
+    facade->register_mediator(facade, user_role_mediator_new());
 }
 
-struct ICommand *startup_command_init(void *buffer) {
-    struct ICommand *command = puremvc_simple_command_init(buffer);
+struct ICommand *startup_command_new() {
+    struct ICommand *command = puremvc_command_new();
     command->execute = execute; // override
     return command;
 }

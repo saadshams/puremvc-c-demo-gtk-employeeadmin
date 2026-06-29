@@ -3,12 +3,12 @@ project(employeeadmin C)
 
 set(CMAKE_C_STANDARD 11)
 
-# 2️⃣ Find dependencies
+# Find dependencies
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4>=4.14)
 
-# 2. External Subprojects
-add_subdirectory("../puremvc-c-multicore-framework2" puremvc)
+# External Subprojects
+add_subdirectory("../puremvc-c-multicore-framework3" puremvc)
 
 # The Core Library
 add_library(core
@@ -51,6 +51,3 @@ if (EMPLOYEE_ADMIN_BUILD_TESTS)
     enable_testing()
     add_subdirectory(test)
 endif ()
-
-message(STATUS "PROJECT_IS_TOP_LEVEL = ${PROJECT_IS_TOP_LEVEL}")
-message(STATUS "EMPLOYEE_ADMIN_BUILD_TESTS = ${EMPLOYEE_ADMIN_BUILD_TESTS}")

@@ -1,8 +1,7 @@
 #pragma once
 
-void testCount(void);
-void testIndexOf(void);
+void test_find_all(void);
 void testList(void);
-void testAdd(void);
-void testUpdate(void);
-void testDelete(void);
+void test_add(void);
+void test_update(void);
+void test_delete(void);
