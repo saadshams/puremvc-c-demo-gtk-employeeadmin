@@ -6,6 +6,8 @@
 
 #include <puremvc/puremvc.h>
 
+#pragma region Accessors
+
 static void set_component(const struct UserListMediator *self, void *component) {
     struct IMediator *super = self->super;
     super->set_component(super, component);
@@ -18,6 +20,10 @@ static void set_component(const struct UserListMediator *self, void *component) 
     });
     user_list_run();
 }
+
+#pragma endregion
+
+#pragma region Notification Handling
 
 static const char *const *list_notification_interests(const struct IMediator *self) {
     (void) self;
@@ -32,11 +38,15 @@ static void handle_notification(const struct IMediator *self, struct INotificati
     }
 }
 
+#pragma endregion
+
+#pragma region Delegate Operations
+
 static struct IArray *find_all(const struct IMediator *self) {
     const struct INotifier *notifier = self->get_notifier(self);
     const struct IFacade *facade = notifier->get_facade(notifier);
 
-    const struct UserProxy *user_proxy = facade->retrieve_proxy(facade, UserProxy_NAME)->instance;
+    const struct UserProxy *user_proxy = facade->retrieve_proxy(facade, UserProxy_NAME)->sub;
     return user_proxy->find_all(user_proxy);
 }
 
@@ -60,6 +70,10 @@ static void on_select(const struct IMediator *self, struct UserVO *user) {
     facade->send_notification(facade, USER_SELECTED, user, NULL);
 }
 
+#pragma endregion
+
+#pragma region Public API
+
 struct IMediator *user_list_mediator_new() {
     struct IMediator *mediator = puremvc_mediator_new(UserListMediator_NAME, NULL);
     mediator->list_notification_interests = list_notification_interests;
@@ -78,3 +92,5 @@ struct UserListMediator *user_list_mediator_extend(struct UserListMediator *medi
 
     return mediator;
 }
+
+#pragma endregion

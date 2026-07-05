@@ -5,6 +5,8 @@
 #include <string.h>
 #include <collection/i_array.h>
 
+#pragma region Hooks
+
 static void on_register(struct IProxy *self) {
     (void) self;
 }
@@ -12,6 +14,10 @@ static void on_register(struct IProxy *self) {
 static void on_remove(struct IProxy *self) {
     (void) self;
 }
+
+#pragma endregion
+
+#pragma region Operations
 
 static struct IArray *find_all(const struct RoleProxy *self) {
     const struct IProxy *super = self->super;
@@ -79,6 +85,10 @@ static void remove_role_from_user(const struct RoleProxy *self, const struct Use
     }
 }
 
+#pragma endregion
+
+#pragma region Memory Management
+
 static size_t size(void) {
     return (sizeof(struct RoleProxy) + (sizeof(void *) - 1u)) & ~(sizeof(void *) - 1u);
 }
@@ -105,6 +115,10 @@ static struct RoleProxy *init(struct RoleProxy *proxy) {
     return proxy;
 }
 
+#pragma endregion
+
+#pragma region Public API
+
 struct RoleProxy *role_proxy_new() {
     struct IProxy *super = puremvc_proxy_new(RoleProxy_NAME, collection_array_new());
     if (super == NULL) return NULL;
@@ -115,11 +129,12 @@ struct RoleProxy *role_proxy_new() {
         return NULL;
     }
 
-    proxy->super = super;
-    proxy->super->on_register = on_register;
-    proxy->super->on_remove = on_remove;
+    super->on_register = on_register;
+    super->on_remove = on_remove;
 
-    proxy->super->instance = proxy;
+    // wire bidirectional references
+    super->sub = proxy; // interface to subclass
+    proxy->super = super; // subclass to interface
 
     return proxy;
 }
@@ -131,8 +146,10 @@ void role_proxy_dealloc(struct RoleProxy **proxy) {
     struct IArray *data = super->get_data(super);
     collection_array_dealloc(&data, free);
 
-    puremvc_proxy_dealloc(&super);
+    puremvc_proxy_dealloc(&super); // Destroy super.
 
-    free(*proxy);
+    free(*proxy); // Destroy sub.
     *proxy = NULL;
 }
+
+#pragma endregion

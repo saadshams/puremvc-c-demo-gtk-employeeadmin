@@ -21,6 +21,4 @@ struct ApplicationFacade {
     void (*set_component)(const struct ApplicationFacade *self, void *component, const char *mediatorName);
 };
 
-struct IFacade *application_facade_getInstance(const char *key);
-
-struct ApplicationFacade *application_facade_extend(struct ApplicationFacade *facade, struct IFacade *super);
+struct ApplicationFacade *application_facade_get_instance(const char *key);

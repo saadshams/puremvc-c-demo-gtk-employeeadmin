@@ -1,5 +1,31 @@
 #include "user_vo.h"
 
+#pragma region Accessors
+
+const char *user_vo_get_username(const struct UserVO *self) {
+    return self ? self->username : "";
+}
+
+const char *user_vo_get_first(const struct UserVO *self) {
+    return self ? self->first : "";
+}
+
+const char *user_vo_get_last(const struct UserVO *self) {
+    return self ? self->last : "";
+}
+
+const char *user_vo_get_email(const struct UserVO *self) {
+    return self ? self->email : "";
+}
+
+const char *user_vo_get_department(const struct UserVO *self) {
+    return self ? dept_to_string(self->department) : "";
+}
+
+#pragma endregion
+
+#pragma region Operations
+
 static bool validate(GtkWidget *username, GtkWidget *password, GtkWidget *confirm, GtkWidget *department) {
     bool isValid = true;
     if (gtk_editable_get_text(GTK_EDITABLE(username))[0] == '\0') {
@@ -41,6 +67,10 @@ static const char *given_name(const struct UserVO *self, char *buffer, size_t bu
     return buffer;
 }
 
+#pragma endregion
+
+#pragma region GObject Wrapper
+
 G_DEFINE_TYPE(UserVOObject, user_vo_object, G_TYPE_OBJECT)
 
 static void user_vo_object_class_init(UserVOObjectClass *klass) {
@@ -57,25 +87,9 @@ UserVOObject *user_vo_object_new(const struct UserVO *user) {
     return object;
 }
 
-const char *user_vo_get_username(const struct UserVO *self) {
-    return self ? self->username : "";
-}
+#pragma endregion
 
-const char *user_vo_get_first(const struct UserVO *self) {
-    return self ? self->first : "";
-}
-
-const char *user_vo_get_last(const struct UserVO *self) {
-    return self ? self->last : "";
-}
-
-const char *user_vo_get_email(const struct UserVO *self) {
-    return self ? self->email : "";
-}
-
-const char *user_vo_get_department(const struct UserVO *self) {
-    return self ? dept_to_string(self->department) : "";
-}
+#pragma region Memory Management
 
 static size_t size(void) {
     return (sizeof(struct UserVO) + (sizeof(void *) - 1u)) & ~(sizeof(void *) - 1u);
@@ -92,7 +106,7 @@ static struct UserVO *alloc(void) {
     return user_vo;
 }
 
-static struct UserVO *init(struct UserVO *user_vo, char *username, char *first, char *last, char *email, char *password, enum DeptEnum department) {
+static struct UserVO *init(struct UserVO *user_vo, const char *username, const char *first, const char *last, const char *email, const char *password, const enum DeptEnum department) {
     if (user_vo == NULL) return NULL;
 
     struct UserVO *this = user_vo;
@@ -101,16 +115,16 @@ static struct UserVO *init(struct UserVO *user_vo, char *username, char *first, 
     this->username = strdup(username != NULL ? username : "");
     if (this->username == NULL) goto exception;
 
-    this->first = first != NULL ? first : "";
+    this->first = strdup(first != NULL ? first : "");
     if (this->first == NULL) goto exception;
 
-    this->last = last != NULL ? last : "";
+    this->last = strdup(last != NULL ? last : "");
     if (this->last == NULL) goto exception;
 
-    this->email = email != NULL ? email : "";
+    this->email = strdup(email != NULL ? email : "");
     if (this->email == NULL) goto exception;
 
-    this->password = password != NULL ? password : "";
+    this->password = strdup(password != NULL ? password : "");
     if (this->password == NULL) goto exception;
 
     this->department = department;
@@ -125,7 +139,11 @@ exception:
     return NULL;
 }
 
-struct UserVO *user_vo_new(char *username, char *first, char *last, char *email, char *password, enum DeptEnum department) {
+#pragma endregion
+
+#pragma region Public API
+
+struct UserVO *user_vo_new(const char *username, const char *first, const char *last, const char *email, const char *password, const enum DeptEnum department) {
     return init(alloc(), username, first, last, email, password, department);
 }
 
@@ -142,3 +160,5 @@ void user_vo_dealloc(struct UserVO **user_vo) {
     free(*user_vo);
     *user_vo = NULL;
 }
+
+#pragma endregion

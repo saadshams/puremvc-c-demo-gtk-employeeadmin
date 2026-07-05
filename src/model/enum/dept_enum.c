@@ -1,16 +1,6 @@
 #include "dept_enum.h"
 
-const char *dept_to_string(const enum DeptEnum dept) {
-    switch (dept) {
-    case DEPT_NONE_SELECTED: return "--NONE_SELECTED--";
-    case DEPT_ACCT: return "Accounting";
-    case DEPT_SALES: return "Sales";
-    case DEPT_PLANT: return "Plant";
-    case DEPT_SHIPPING: return "Shipping";
-    case DEPT_QC: return "Quality Control";
-    default: return "Unknown";
-    }
-}
+#pragma region Constants
 
 const enum DeptEnum DEPT_LIST[] = {
     DEPT_ACCT,
@@ -32,3 +22,21 @@ const enum DeptEnum DEPT_COMBO_LIST[] = {
 };
 
 const int DEPT_COMBO_LIST_COUNT = sizeof(DEPT_COMBO_LIST) / sizeof(DEPT_COMBO_LIST[0]);
+
+#pragma endregion
+
+#pragma region Accessors
+
+const char *dept_to_string(const enum DeptEnum dept) {
+    switch (dept) {
+        case DEPT_NONE_SELECTED: return "--NONE_SELECTED--";
+        case DEPT_ACCT: return "Accounting";
+        case DEPT_SALES: return "Sales";
+        case DEPT_PLANT: return "Plant";
+        case DEPT_SHIPPING: return "Shipping";
+        case DEPT_QC: return "Quality Control";
+        default: return "Unknown";
+    }
+}
+
+#pragma endregion

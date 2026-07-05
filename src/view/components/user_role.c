@@ -2,16 +2,24 @@
 
 #include "model/enum/role_enum.h"
 
-struct IUserRole delegate;
+#pragma region State
 
-// Signal handlers
+static struct IUserRole delegate;
+
+#pragma endregion
+
+#pragma region Signal Handlers
+
 static gboolean on_close_request(GtkWindow *window, gpointer data) {
     (void) window; (void) data;
     return FALSE;
 }
 
-// Layout
-static GtkWidget *header() {
+#pragma endregion
+
+#pragma region Layout
+
+static GtkWidget *header(void) {
     GtkWidget *label = gtk_label_new("User Role");
     gtk_widget_add_css_class(label, "title-4");
     gtk_widget_set_halign(label, GTK_ALIGN_START);
@@ -24,7 +32,7 @@ static GtkWidget *header() {
     return label;
 }
 
-static GtkWidget *body() {
+static GtkWidget *body(void) {
     GtkWidget *list = gtk_list_box_new();
     gtk_widget_set_vexpand(list, TRUE);
 
@@ -40,7 +48,7 @@ static GtkWidget *body() {
     return list;
 }
 
-static GtkWidget *footer() {
+static GtkWidget *footer(void) {
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
 
     gtk_widget_set_margin_top(box, 5);
@@ -67,6 +75,10 @@ static GtkWidget *footer() {
     return box;
 }
 
+#pragma endregion
+
+#pragma region Public API
+
 GtkWidget *user_role_init(GtkWidget *window) {
     g_signal_connect(GTK_WINDOW(window), "close-request", G_CALLBACK(on_close_request), NULL);
 
@@ -90,3 +102,5 @@ GtkWidget *user_role_init(GtkWidget *window) {
 void user_role_set_delegate(struct IUserRole _delegate) {
     delegate = _delegate;
 }
+
+#pragma endregion

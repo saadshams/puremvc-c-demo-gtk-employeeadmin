@@ -2,6 +2,8 @@
 
 #include <collection/i_array.h>
 
+#pragma region Types
+
 struct IUserList {
     void *context;
     struct IArray *(*find_all)(void *context);
@@ -9,3 +11,5 @@ struct IUserList {
     void (*on_delete)(void *context, const void *data);
     void (*on_select)(void *context, const void *data);
 };
+
+#pragma endregion

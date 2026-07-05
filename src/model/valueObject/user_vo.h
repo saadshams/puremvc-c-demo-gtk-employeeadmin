@@ -38,6 +38,6 @@ const char *user_vo_get_last(const struct UserVO *self);
 const char *user_vo_get_email(const struct UserVO *self);
 const char *user_vo_get_department(const struct UserVO *self);
 
-struct UserVO *user_vo_new(char *username, char *first, char *last, char *email, char *password, enum DeptEnum department);
+struct UserVO *user_vo_new(const char *username, const char *first, const char *last, const char *email, const char *password, enum DeptEnum department);
 
 void user_vo_dealloc(struct UserVO **user_vo);

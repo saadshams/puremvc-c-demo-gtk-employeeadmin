@@ -8,6 +8,8 @@
 #include "view/components/user_form.h"
 #include "view/components/user_role.h"
 
+#pragma region Layout
+
 static GtkWidget *master(GtkWidget *window, gpointer data) {
     const struct ApplicationFacade *facade = data;
     GtkWidget *user = user_list_init(window);
@@ -57,6 +59,10 @@ static GtkWidget *layout(GtkWidget *window, gpointer data) {
     return box;
 }
 
+#pragma endregion
+
+#pragma region Styling
+
 static void load_css(void) {
     GtkCssProvider *provider = gtk_css_provider_new();
     gtk_css_provider_load_from_string(provider,
@@ -69,6 +75,10 @@ static void load_css(void) {
 
     g_object_unref(provider);
 }
+
+#pragma endregion
+
+#pragma region Public API
 
 static void activate(GtkApplication *app, gpointer data) {
     GtkWidget *window = gtk_application_window_new(app);
@@ -88,3 +98,5 @@ GtkApplication *get_app(gpointer data) {
     g_signal_connect(app, "activate", G_CALLBACK(activate), data);
     return app;
 }
+
+#pragma endregion

@@ -3,13 +3,27 @@
 #include "employee_admin/i_user_form.h"
 #include "model/enum/dept_enum.h"
 
+#pragma region State
+
 static GtkWidget *first, *last, *email, *username, *password, *confirm, *department;
 static struct UserVO *user;
-struct IUserForm delegate;
+static struct IUserForm delegate;
+
+#pragma endregion
+
+#pragma region Signal Handlers
 
 // Signal handlers
 static void on_update(GtkButton *button, gpointer data) {
     (void) button; (void) data;
+
+    if (!user) return;
+
+    g_free(user->first);
+    g_free(user->last);
+    g_free(user->email);
+    g_free(user->username);
+    g_free(user->password);
 
     user->first = g_strdup(gtk_editable_get_text(GTK_EDITABLE(first)));
     user->last = g_strdup(gtk_editable_get_text(GTK_EDITABLE(last)));
@@ -24,13 +38,20 @@ static void on_update(GtkButton *button, gpointer data) {
         delegate.on_update(delegate.context, user);
 }
 
+static void on_cancel(GtkButton *button, gpointer data) {
+
+}
+
 static gboolean on_close_request(GtkWindow *window, gpointer data) {
     (void) window; (void) data;
     return FALSE;
 }
 
-// Layout
-static GtkWidget *header() {
+#pragma endregion
+
+#pragma region Layout
+
+static GtkWidget *header(void) {
     GtkWidget *label = gtk_label_new("User Profile");
     gtk_widget_add_css_class(label, "title-4");
     gtk_widget_set_halign(label, GTK_ALIGN_START);
@@ -85,7 +106,7 @@ static GtkWidget *body(void) {
     return grid;
 }
 
-static GtkWidget *footer() {
+static GtkWidget *footer(void) {
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
     gtk_widget_set_margin_top(box, 5);
@@ -98,6 +119,7 @@ static GtkWidget *footer() {
     g_signal_connect(update, "clicked", G_CALLBACK(on_update), NULL);
 
     GtkWidget *cancel = gtk_button_new_with_label("Cancel");
+    g_signal_connect(cancel, "clicked", G_CALLBACK(on_cancel), NULL);
     gtk_widget_set_margin_start(cancel, 5);
     gtk_widget_add_css_class(cancel, "destructive-action");
 
@@ -107,6 +129,10 @@ static GtkWidget *footer() {
 
     return box;
 }
+
+#pragma endregion
+
+#pragma region Public API
 
 GtkWidget *user_form_init(GtkWidget *window) {
     g_signal_connect(GTK_WINDOW(window), "close-request", G_CALLBACK(on_close_request), NULL);
@@ -166,3 +192,5 @@ void user_form_set_user(struct UserVO *_user) {
 void user_form_set_delegate(struct IUserForm _delegate) {
     delegate = _delegate;
 }
+
+#pragma endregion

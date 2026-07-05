@@ -11,6 +11,8 @@
 
 #include <puremvc/puremvc.h>
 
+#pragma region Operations
+
 static void execute(const struct ICommand *self, struct INotification *notification) {
     const struct INotifier *notifier = self->get_notifier(self);
     const struct IFacade *facade = notifier->get_facade(notifier);
@@ -41,8 +43,14 @@ static void execute(const struct ICommand *self, struct INotification *notificat
     facade->register_mediator(facade, user_role_mediator_new());
 }
 
+#pragma endregion
+
+#pragma region Public API
+
 struct ICommand *startup_command_new() {
     struct ICommand *command = puremvc_command_new();
     command->execute = execute; // override
     return command;
 }
+
+#pragma endregion

@@ -1,13 +1,18 @@
 #include "user_list.h"
 #include "employee_admin/i_user_list.h"
 
+#pragma region State
+
 static GListStore *store;
 static GtkSingleSelection *selection;
 static GtkWidget *column_view;
 static GtkWidget *delete;
 static struct IUserList delegate;
 
-// Signal handlers
+#pragma endregion
+
+#pragma region Signal Handlers
+
 static void on_new(GtkButton *button, gpointer data) {
     (void) button; (void) data;
     gtk_single_selection_set_selected(selection, GTK_INVALID_LIST_POSITION);
@@ -28,8 +33,16 @@ static void on_select(GtkSingleSelection *sel, GParamSpec *pspec, gpointer data)
 
     if (position == GTK_INVALID_LIST_POSITION) return;
 
-    const struct UserVO *user = ((UserVOObject *) gtk_single_selection_get_selected_item(sel))->user;
-    delegate.on_select(delegate.context, user);
+    UserVOObject *object = gtk_single_selection_get_selected_item(sel);
+    if (!object || !object->user) {
+        g_clear_object(&object);
+        return;
+    }
+
+    delegate.on_select(delegate.context, object->user);
+
+    g_object_unref(object);
+
 }
 
 static gboolean on_close_request(GtkWindow *window, gpointer data) {
@@ -48,7 +61,10 @@ static gboolean on_close_request(GtkWindow *window, gpointer data) {
     return FALSE; // allow GTK to continue closing the window
 }
 
-// UI helpers
+#pragma endregion
+
+#pragma region Column Factory
+
 static void setup(GtkSignalListItemFactory *factory, GtkListItem *list_item, gpointer data) {
     (void) factory; (void) data;
     GtkWidget *label = gtk_label_new("");
@@ -85,8 +101,11 @@ static GtkColumnViewColumn *create_text_column(const char *title, const char *(*
     return column;
 }
 
-// Layout
-static GtkWidget *header() {
+#pragma endregion
+
+#pragma region Layout
+
+static GtkWidget *header(void) {
     GtkWidget *label = gtk_label_new("Users");
     gtk_widget_add_css_class(label, "title-4");
     gtk_widget_set_halign(label, GTK_ALIGN_START);
@@ -99,7 +118,7 @@ static GtkWidget *header() {
     return label;
 }
 
-static GtkWidget *body() {
+static GtkWidget *body(void) {
     GtkWidget *scroller = gtk_scrolled_window_new();
     gtk_widget_set_vexpand(scroller, TRUE);
     gtk_widget_set_hexpand(scroller, TRUE);
@@ -117,7 +136,7 @@ static GtkWidget *body() {
     return scroller;
 }
 
-static GtkWidget *footer() {
+static GtkWidget *footer(void) {
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
 
     gtk_widget_set_margin_top(box, 5);
@@ -141,7 +160,10 @@ static GtkWidget *footer() {
     return box;
 }
 
-// Public methods
+#pragma endregion
+
+#pragma region Public API
+
 GtkWidget *user_list_init(GtkWidget *window) {
     g_signal_connect(GTK_WINDOW(window), "close-request", G_CALLBACK(on_close_request), NULL);
 
@@ -163,7 +185,7 @@ GtkWidget *user_list_init(GtkWidget *window) {
     return frame;
 }
 
-void user_list_run() {
+void user_list_run(void) {
     const struct IArray *users = delegate.find_all(delegate.context);
     const size_t count = users->count(users);
 
@@ -212,3 +234,5 @@ void user_list_refresh(const struct UserVO *user) {
 void user_list_set_delegate(struct IUserList _delegate) {
     delegate = _delegate;
 }
+
+#pragma endregion

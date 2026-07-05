@@ -2,6 +2,8 @@
 #include "application_facade.h"
 #include "components/user_form.h"
 
+#pragma region Accessors
+
 static void set_component(const struct UserFormMediator *self, void *component) {
     struct IMediator *super = self->super;
     super->set_component(super, component);
@@ -10,6 +12,10 @@ static void set_component(const struct UserFormMediator *self, void *component) 
         .on_update = (void (*) (void *, void *)) self->on_update,
     });
 }
+
+#pragma endregion
+
+#pragma region Notification Handling
 
 static const char *const *list_notification_interests(const struct IMediator *self) {
     (void) self;
@@ -24,12 +30,20 @@ static void handle_notification(const struct IMediator *self, struct INotificati
     }
 }
 
+#pragma endregion
+
+#pragma region Delegate Operations
+
 static void on_update(const struct IMediator *self, struct UserVO *user) {
     const struct INotifier *notifier = self->get_notifier(self);
     const struct IFacade *facade = notifier->get_facade(notifier);
     facade->send_notification(facade, USER_UPDATED, user, NULL);
     user_form_reset();
 }
+
+#pragma endregion
+
+#pragma region Public API
 
 struct IMediator *user_form_mediator_new() {
     struct IMediator *mediator = puremvc_mediator_new(UserFormMediator_NAME, NULL);
@@ -44,3 +58,5 @@ struct UserFormMediator *user_form_mediator_extend(struct UserFormMediator *medi
     mediator->on_update = on_update;
     return mediator;
 }
+
+#pragma endregion

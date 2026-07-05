@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#pragma region Memory Management
+
 static size_t size(void) {
     return (sizeof(struct RoleVO) + (sizeof(void *) - 1u)) & ~(sizeof(void *) - 1u);
 }
@@ -46,6 +48,10 @@ exception:
     return NULL;
 }
 
+#pragma endregion
+
+#pragma region Public API
+
 struct RoleVO *role_vo_new(char *username) {
     return init(alloc(), username);
 }
@@ -60,3 +66,5 @@ void role_vo_dealloc(struct RoleVO **role_vo) {
     free(*role_vo);
     *role_vo = NULL;
 }
+
+#pragma endregion
