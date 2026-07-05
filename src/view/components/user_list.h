@@ -1,7 +1,7 @@
 #pragma once
 
 #include "employee_admin/i_user_list.h"
-#include "model/valueObject/user_vo.h"
+#include "model/value_object/user_vo.h"
 
 #include "gtk/gtk.h"
 

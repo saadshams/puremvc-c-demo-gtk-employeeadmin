@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model/valueObject/user_vo.h"
+#include "model/value_object/user_vo.h"
 
 #include <puremvc/puremvc.h>
 

@@ -1,6 +1,6 @@
 #include "role_proxy_test.h"
 #include "model/role_proxy.h"
-#include "model/valueObject/role_vo.h"
+#include "model/value_object/role_vo.h"
 
 #include <stdio.h>
 #include <stdlib.h>

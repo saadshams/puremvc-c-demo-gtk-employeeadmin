@@ -1,6 +1,6 @@
 #include "user_proxy_test.h"
 #include "model/user_proxy.h"
-#include "model/valueObject/user_vo.h"
+#include "model/value_object/user_vo.h"
 
 #include <stdio.h>
 #include <stdlib.h>

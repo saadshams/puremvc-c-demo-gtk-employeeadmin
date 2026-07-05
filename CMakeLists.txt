@@ -20,8 +20,8 @@ add_library(core
         src/model/role_proxy.c
         src/model/enum/dept_enum.c
         src/model/enum/role_enum.c
-        src/model/valueObject/user_vo.c
-        src/model/valueObject/role_vo.c
+        src/model/value_object/user_vo.c
+        src/model/value_object/role_vo.c
         src/view/user_list_mediator.c
         src/view/user_form_mediator.c
         src/view/user_role_mediator.c

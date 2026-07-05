@@ -1,7 +1,5 @@
 #include "role_proxy.h"
 
-#include "model/valueObject/role_vo.h"
-
 #include <string.h>
 #include <collection/i_array.h>
 

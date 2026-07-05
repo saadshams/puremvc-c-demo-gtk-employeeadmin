@@ -1,7 +1,7 @@
 #pragma once
 
-#include "model/valueObject/user_vo.h"
-#include "model/valueObject/role_vo.h"
+#include "model/value_object/user_vo.h"
+#include "model/value_object/role_vo.h"
 #include "model/enum/role_enum.h"
 
 #include <puremvc/puremvc.h>

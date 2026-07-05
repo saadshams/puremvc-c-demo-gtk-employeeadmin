@@ -4,7 +4,7 @@
 #include "register_command.h"
 #include "model/user_proxy.h"
 #include "model/role_proxy.h"
-#include "model/valueObject/user_vo.h"
+#include "model/value_object/user_vo.h"
 #include "view/user_list_mediator.h"
 #include "view/user_form_mediator.h"
 #include "view/user_role_mediator.h"
