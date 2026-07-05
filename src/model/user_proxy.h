@@ -15,6 +15,6 @@ struct UserProxy {
     bool (*delete)(const struct UserProxy *self, const struct UserVO *user);
 };
 
-struct UserProxy *user_proxy_new(void);
+struct IProxy *user_proxy_new(void);
 
 void user_proxy_dealloc(struct UserProxy **proxy);

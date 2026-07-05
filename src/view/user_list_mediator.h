@@ -18,6 +18,6 @@ struct UserListMediator {
     void (*on_select)(const struct IMediator *self, struct UserVO *user);
 };
 
-struct IMediator *user_list_mediator_new();
+struct IMediator *user_list_mediator_new(void);
 
-struct UserListMediator *user_list_mediator_extend(struct UserListMediator *mediator, struct IMediator *super);
+void user_list_mediator_dealloc(struct UserListMediator **mediator);

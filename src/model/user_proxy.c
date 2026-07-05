@@ -98,7 +98,7 @@ static struct UserProxy *init(struct UserProxy *proxy) {
 
 #pragma region Public API
 
-struct UserProxy *user_proxy_new(void) {
+struct IProxy *user_proxy_new(void) {
     struct IProxy *super = puremvc_proxy_new(UserProxy_NAME, collection_array_new());
     if (super == NULL) return NULL;
 
@@ -115,7 +115,7 @@ struct UserProxy *user_proxy_new(void) {
     super->sub = proxy; // interface to subclass
     proxy->super = super; // subclass to interface
 
-    return proxy;
+    return super;
 }
 
 void user_proxy_dealloc(struct UserProxy **proxy) {

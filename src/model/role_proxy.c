@@ -119,7 +119,7 @@ static struct RoleProxy *init(struct RoleProxy *proxy) {
 
 #pragma region Public API
 
-struct RoleProxy *role_proxy_new() {
+struct IProxy *role_proxy_new(void) {
     struct IProxy *super = puremvc_proxy_new(RoleProxy_NAME, collection_array_new());
     if (super == NULL) return NULL;
 
@@ -136,7 +136,7 @@ struct RoleProxy *role_proxy_new() {
     super->sub = proxy; // interface to subclass
     proxy->super = super; // subclass to interface
 
-    return proxy;
+    return super;
 }
 
 void role_proxy_dealloc(struct RoleProxy **proxy) {

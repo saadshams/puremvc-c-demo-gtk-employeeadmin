@@ -14,15 +14,14 @@ static void execute(const struct ICommand *self, struct INotification *notificat
     void *component = notification->get_body(notification);
     const char *mediatorName = notification->get_type(notification);
 
-    struct IMediator *super = facade->retrieve_mediator(facade, mediatorName);
     if (strcmp(mediatorName, UserListMediator_NAME) == 0) {
-        const struct UserListMediator *mediator = user_list_mediator_extend(&(struct UserListMediator){}, super);
+        const struct UserListMediator *mediator = facade->retrieve_mediator(facade, mediatorName)->sub;
         mediator->set_component(mediator, component);
     } else if (strcmp(mediatorName, UserFormMediator_NAME) == 0) {
-        const struct UserFormMediator *mediator = user_form_mediator_extend(&(struct UserFormMediator){}, super);
+        const struct UserFormMediator *mediator = facade->retrieve_mediator(facade, mediatorName)->sub;
         mediator->set_component(mediator, component);
     } else if (strcmp(mediatorName, UserRoleMediator_NAME) == 0) {
-        const struct UserRoleMediator *mediator = user_role_mediator_extend(&(struct UserRoleMediator){}, super);
+        const struct UserRoleMediator *mediator = facade->retrieve_mediator(facade, mediatorName)->sub;
         mediator->set_component(mediator, component);
     }
 }

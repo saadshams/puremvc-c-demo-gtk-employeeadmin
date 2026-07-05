@@ -13,6 +13,6 @@ struct UserFormMediator {
     void (*on_update)(const struct IMediator *self, struct UserVO *user);
 };
 
-struct IMediator *user_form_mediator_new();
+struct IMediator *user_form_mediator_new(void);
 
-struct UserFormMediator *user_form_mediator_extend(struct UserFormMediator *mediator, struct IMediator *super);
+void user_form_mediator_dealloc(struct UserFormMediator **mediator);

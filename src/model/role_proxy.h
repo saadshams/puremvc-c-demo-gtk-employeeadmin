@@ -17,6 +17,6 @@ struct RoleProxy {
     void (*remove_role_from_user)(const struct RoleProxy *self, const struct UserVO *user, enum RoleEnum role);
 };
 
-struct RoleProxy *role_proxy_new();
+struct IProxy *role_proxy_new();
 
 void role_proxy_dealloc(struct RoleProxy **proxy);

@@ -10,6 +10,6 @@ struct UserRoleMediator {
     void (*set_component)(const struct UserRoleMediator *mediator, void *component);
 };
 
-struct IMediator *user_role_mediator_new();
+struct IMediator *user_role_mediator_new(void);
 
-struct UserRoleMediator *user_role_mediator_extend(struct UserRoleMediator *mediator, struct IMediator *super);
+void user_role_mediator_dealloc(struct UserRoleMediator **mediator);

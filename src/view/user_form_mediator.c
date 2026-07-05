@@ -43,20 +43,67 @@ static void on_update(const struct IMediator *self, struct UserVO *user) {
 
 #pragma endregion
 
-#pragma region Public API
+#pragma region Memory Management
 
-struct IMediator *user_form_mediator_new() {
-    struct IMediator *mediator = puremvc_mediator_new(UserFormMediator_NAME, NULL);
-    mediator->list_notification_interests = list_notification_interests;
-    mediator->handle_notification = handle_notification;
+static size_t size(void) {
+    return (sizeof(struct UserFormMediator) + (sizeof(void *) - 1u)) & ~(sizeof(void *) - 1u);
+}
+
+static struct UserFormMediator *alloc(void) {
+    struct UserFormMediator *mediator = malloc(size());
+
+    if (mediator == NULL) {
+        fprintf(stderr, "\033[0;31m[EmployeeAdmin::UserFormMediator::alloc] ERROR: Instance allocation failed.\033[0m\n");
+        return NULL;
+    }
+
     return mediator;
 }
 
-struct UserFormMediator *user_form_mediator_extend(struct UserFormMediator *mediator, struct IMediator *super) {
-    mediator->super = super;
+static struct UserFormMediator *init(struct UserFormMediator *mediator) {
+    if (mediator == NULL) return NULL;
+
+    memset(mediator, 0, size());
+
     mediator->set_component = set_component;
     mediator->on_update = on_update;
+
     return mediator;
+}
+
+#pragma endregion
+
+#pragma region Public API
+
+struct IMediator *user_form_mediator_new(void) {
+    struct IMediator *super = puremvc_mediator_new(UserFormMediator_NAME, NULL);
+    if (super == NULL) return NULL;
+
+    struct UserFormMediator *mediator = init(alloc());
+    if (mediator == NULL) {
+        puremvc_mediator_dealloc(&super);
+        return NULL;
+    }
+
+    super->list_notification_interests = list_notification_interests;
+    super->handle_notification = handle_notification;
+
+    // wire bidirectional references
+    super->sub = mediator; // interface to subclass
+    mediator->super = super; // subclass to interface
+
+    return super;
+}
+
+void user_form_mediator_dealloc(struct UserFormMediator **mediator) {
+    if (mediator == NULL || *mediator == NULL) return;
+
+    struct IMediator *super = (*mediator)->super;
+
+    puremvc_mediator_dealloc(&super); // Destroy super.
+
+    free(*mediator); // Destroy sub.
+    *mediator = NULL;
 }
 
 #pragma endregion
