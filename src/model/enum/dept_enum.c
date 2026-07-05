@@ -10,7 +10,7 @@ const enum DeptEnum DEPT_LIST[] = {
     DEPT_QC
 };
 
-const int DEPT_COUNT = sizeof(DEPT_LIST) / sizeof(DEPT_LIST[0]);
+const size_t DEPT_COUNT = sizeof(DEPT_LIST) / sizeof(DEPT_LIST[0]);
 
 const enum DeptEnum DEPT_COMBO_LIST[] = {
     DEPT_NONE_SELECTED,
@@ -21,7 +21,7 @@ const enum DeptEnum DEPT_COMBO_LIST[] = {
     DEPT_QC
 };
 
-const int DEPT_COMBO_LIST_COUNT = sizeof(DEPT_COMBO_LIST) / sizeof(DEPT_COMBO_LIST[0]);
+const size_t DEPT_COMBO_LIST_COUNT = sizeof(DEPT_COMBO_LIST) / sizeof(DEPT_COMBO_LIST[0]);
 
 #pragma endregion
 

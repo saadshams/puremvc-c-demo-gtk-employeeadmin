@@ -19,7 +19,7 @@ const enum RoleEnum ROLE_LIST[] = {
     ROLE_RETURNS
 };
 
-const int ROLE_LIST_COUNT = sizeof(ROLE_LIST) / sizeof(ROLE_LIST[0]);
+const size_t ROLE_LIST_COUNT = sizeof(ROLE_LIST) / sizeof(ROLE_LIST[0]);
 
 const enum RoleEnum ROLE_COMBO_LIST[] = {
     ROLE_NONE_SELECTED,
@@ -39,7 +39,7 @@ const enum RoleEnum ROLE_COMBO_LIST[] = {
     ROLE_RETURNS
 };
 
-const int ROLE_COMBO_LIST_COUNT = sizeof(ROLE_COMBO_LIST) / sizeof(ROLE_COMBO_LIST[0]);
+const size_t ROLE_COMBO_LIST_COUNT = sizeof(ROLE_COMBO_LIST) / sizeof(ROLE_COMBO_LIST[0]);
 
 #pragma endregion
 

@@ -1,5 +1,9 @@
 #pragma once
 
+#include <stddef.h>
+
+#pragma region Types
+
 enum RoleEnum {
     ROLE_NONE_SELECTED = 0,
     ROLE_ADMIN = 1,
@@ -18,10 +22,16 @@ enum RoleEnum {
     ROLE_RETURNS = 14
 };
 
+#pragma endregion
+
+#pragma region Public API
+
 const char *role_to_string(enum RoleEnum role);
 
 extern const enum RoleEnum ROLE_LIST[];
-extern const int ROLE_LIST_COUNT;
+extern const size_t ROLE_LIST_COUNT;
 
 extern const enum RoleEnum ROLE_COMBO_LIST[];
-extern const int ROLE_COMBO_LIST_COUNT;
+extern const size_t ROLE_COMBO_LIST_COUNT;
+
+#pragma endregion
