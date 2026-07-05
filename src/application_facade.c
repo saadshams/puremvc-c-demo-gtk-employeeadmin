@@ -82,10 +82,10 @@ static struct IFacade *new(const char *key) {
 
 #pragma region Public API
 
-struct ApplicationFacade *application_facade_get_instance(const char *key) {
-    const struct IFacade *facade = puremvc_facade_get_instance(key, new);
+struct IFacade *application_facade_get_instance(const char *key) {
+    struct IFacade *facade = puremvc_facade_get_instance(key, new);
     if (facade == NULL) return NULL;
-    return facade->sub;
+    return facade;
 }
 
 #pragma endregion

@@ -1,6 +1,7 @@
 #include "user_role.h"
 
 #include "model/enum/role_enum.h"
+#include "employee_admin/i_user_role.h"
 
 #pragma region State
 
@@ -83,18 +84,18 @@ GtkWidget *user_role_init(GtkWidget *window) {
     g_signal_connect(GTK_WINDOW(window), "close-request", G_CALLBACK(on_close_request), NULL);
 
     GtkWidget *frame = gtk_frame_new(NULL);
-    gtk_frame_set_label_widget(GTK_FRAME(frame), header()); // Header
+    gtk_frame_set_label_widget(GTK_FRAME(frame), header());
 
-    GtkWidget *content_area = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);  // Layout Container
-    gtk_widget_set_margin_start(content_area, 15);
-    gtk_widget_set_margin_end(content_area, 15);
-    gtk_widget_set_margin_top(content_area, 15);
-    gtk_widget_set_margin_bottom(content_area, 10);
+    GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+    gtk_widget_set_margin_start(box, 15);
+    gtk_widget_set_margin_end(box, 15);
+    gtk_widget_set_margin_top(box, 15);
+    gtk_widget_set_margin_bottom(box, 10);
 
-    gtk_box_append(GTK_BOX(content_area), body()); // Assembly
-    gtk_box_append(GTK_BOX(content_area), footer());
+    gtk_box_append(GTK_BOX(box), body());
+    gtk_box_append(GTK_BOX(box), footer());
 
-    gtk_frame_set_child(GTK_FRAME(frame), content_area);
+    gtk_frame_set_child(GTK_FRAME(frame), box);
 
     return frame;
 }

@@ -5,7 +5,7 @@
 #include <gtk/gtk.h>
 
 int main(const int argc, char **argv) {
-    struct ApplicationFacade *facade = application_facade_get_instance("EmployeeAdmin");
+    struct ApplicationFacade *facade = application_facade_get_instance("EmployeeAdmin")->sub;
 
     facade->startup(facade);
 
