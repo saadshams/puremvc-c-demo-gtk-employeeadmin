@@ -9,16 +9,16 @@
 #pragma region Accessors
 
 static void set_component(const struct UserListMediator *self, void *component) {
-    struct IMediator *super = self->super;
-    super->set_component(super, component);
+    struct IMediator *mediator = self->super;
+    mediator->set_component(mediator, component);
+
     user_list_set_delegate((struct IUserList) {
-        .context = super,
+        .context = mediator,
         .find_all = (struct IArray *(*) (void *)) self->find_all,
         .on_new = (void (*) (void *, const void *)) self->on_new,
         .on_delete = (void (*) (void *, const void *)) self->on_delete,
         .on_select = (void (*) (void *, const void *)) self->on_select
     });
-    user_list_load();
 }
 
 #pragma endregion

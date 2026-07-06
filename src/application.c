@@ -28,8 +28,9 @@ static void activate(GtkApplication *app, gpointer data) {
 
     gtk_window_set_child(GTK_WINDOW(window), layout(window, data));
     gtk_window_present(GTK_WINDOW(window));
-
     css_provider();
+
+    user_list_load_users();
 }
 
 #pragma endregion

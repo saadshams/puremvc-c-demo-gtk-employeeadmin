@@ -5,10 +5,11 @@
 #pragma region Accessors
 
 static void set_component(const struct UserFormMediator *self, void *component) {
-    struct IMediator *super = self->super;
-    super->set_component(super, component);
+    struct IMediator *mediator = self->super;
+    mediator->set_component(mediator, component);
+
     user_form_set_delegate((struct IUserForm) {
-        .context = super,
+        .context = mediator,
         .on_update = (void (*) (void *, void *)) self->on_update,
     });
 }

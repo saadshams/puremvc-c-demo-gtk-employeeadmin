@@ -3,10 +3,13 @@
 
 #pragma region Accessors
 
-static void set_component(const struct UserRoleMediator *mediator, void *component) {
-    struct IMediator *self = mediator->super;
-    self->set_component(self, component);
-    user_role_set_delegate((struct IUserRole) { .context = self } );
+static void set_component(const struct UserRoleMediator *self, void *component) {
+    struct IMediator *mediator = self->super;
+    mediator->set_component(mediator, component);
+
+    user_role_set_delegate((struct IUserRole) {
+        .context = mediator
+    });
 }
 
 #pragma endregion

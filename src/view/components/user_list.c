@@ -190,7 +190,7 @@ GtkWidget *user_list_layout(GtkWidget *window) {
     return frame;
 }
 
-void user_list_load(void) {
+void user_list_load_users(void) {
     const struct IArray *users = delegate.find_all(delegate.context);
     const size_t count = users->count(users);
 
