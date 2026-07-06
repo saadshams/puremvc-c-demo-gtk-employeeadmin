@@ -1,7 +1,5 @@
 #include "user_proxy.h"
 
-#include <collection/i_array.h>
-
 #pragma region Operations
 
 static GListStore *find_all(const struct UserProxy *self) {

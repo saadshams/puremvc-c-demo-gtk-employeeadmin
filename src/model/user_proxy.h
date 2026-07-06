@@ -3,6 +3,7 @@
 #include "model/value_object/user_vo.h"
 
 #include <puremvc/puremvc.h>
+#include <gtk/gtk.h>
 
 #define UserProxy_NAME "UserProxy"
 

@@ -2,8 +2,8 @@
 
 #include "model/enum/dept_enum.h"
 
-#include <stdbool.h>
 #include <gtk/gtk.h>
+#include <stdbool.h>
 
 #define MAX_USERS 64
 

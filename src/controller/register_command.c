@@ -1,4 +1,5 @@
 #include "register_command.h"
+
 #include "view/user_list_mediator.h"
 #include "view/user_form_mediator.h"
 #include "view/user_role_mediator.h"

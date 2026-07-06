@@ -5,6 +5,7 @@
 #include "model/enum/role_enum.h"
 
 #include <puremvc/puremvc.h>
+#include <collection/collection.h>
 
 #define RoleProxy_NAME "RoleProxy"
 

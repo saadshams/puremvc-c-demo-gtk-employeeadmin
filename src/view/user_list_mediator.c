@@ -4,8 +4,6 @@
 #include "model/user_proxy.h"
 #include "view/components/user_list.h"
 
-#include <puremvc/puremvc.h>
-
 #pragma region Accessors
 
 static void set_component(const struct UserListMediator *self, void *component) {
