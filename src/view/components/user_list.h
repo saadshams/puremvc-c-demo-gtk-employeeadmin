@@ -5,9 +5,9 @@
 
 #include "gtk/gtk.h"
 
-GtkWidget *user_list_init(GtkWidget *window);
+GtkWidget *user_list_layout(GtkWidget *window);
 
-void user_list_run();
+void user_list_load();
 
 void user_list_refresh(const struct UserVO *user);
 

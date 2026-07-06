@@ -18,7 +18,7 @@ static void set_component(const struct UserListMediator *self, void *component) 
         .on_delete = (void (*) (void *, const void *)) self->on_delete,
         .on_select = (void (*) (void *, const void *)) self->on_select
     });
-    user_list_run();
+    user_list_load();
 }
 
 #pragma endregion

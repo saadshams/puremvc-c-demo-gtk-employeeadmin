@@ -5,7 +5,7 @@
 
 #include "gtk/gtk.h"
 
-GtkWidget *user_form_init(GtkWidget *window);
+GtkWidget *user_form_layout(GtkWidget *window);
 
 void user_form_reset(void);
 

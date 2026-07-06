@@ -139,7 +139,7 @@ static GtkWidget *footer(void) {
 
 #pragma region Public API
 
-GtkWidget *user_form_init(GtkWidget *window) {
+GtkWidget *user_form_layout(GtkWidget *window) {
     g_signal_connect(GTK_WINDOW(window), "close-request", G_CALLBACK(on_close_request), NULL);
 
     GtkWidget *frame = gtk_frame_new(NULL);

@@ -170,7 +170,7 @@ static GtkWidget *footer(void) {
 
 #pragma region Public API
 
-GtkWidget *user_list_init(GtkWidget *window) {
+GtkWidget *user_list_layout(GtkWidget *window) {
     g_signal_connect(GTK_WINDOW(window), "close-request", G_CALLBACK(on_close_request), NULL);
 
     GtkWidget *frame = gtk_frame_new(NULL);
@@ -190,7 +190,7 @@ GtkWidget *user_list_init(GtkWidget *window) {
     return frame;
 }
 
-void user_list_run(void) {
+void user_list_load(void) {
     const struct IArray *users = delegate.find_all(delegate.context);
     const size_t count = users->count(users);
 
