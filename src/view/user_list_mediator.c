@@ -14,10 +14,10 @@ static void set_component(const struct UserListMediator *self, void *component) 
 
     user_list_set_delegate((struct IUserList) {
         .context = mediator,
-        .find_all = (struct IArray *(*) (void *)) self->find_all,
-        .on_new = (void (*) (void *, const void *)) self->on_new,
-        .on_delete = (void (*) (void *, const void *)) self->on_delete,
-        .on_select = (void (*) (void *, const void *)) self->on_select
+        .find_all = (GListStore *(*) (void *)) self->find_all,
+        .on_new = (void (*) (void *, const UserVOObject *)) self->on_new,
+        .on_delete = (void (*) (void *, const UserVOObject *)) self->on_delete,
+        .on_select = (void (*) (void *, const UserVOObject *)) self->on_select
     });
 }
 
@@ -42,7 +42,7 @@ static void handle_notification(const struct IMediator *self, struct INotificati
 
 #pragma region Delegate Operations
 
-static struct IArray *find_all(const struct IMediator *self) {
+static GListStore *find_all(const struct IMediator *self) {
     const struct INotifier *notifier = self->get_notifier(self);
     const struct IFacade *facade = notifier->get_facade(notifier);
 
@@ -50,24 +50,24 @@ static struct IArray *find_all(const struct IMediator *self) {
     return user_proxy->find_all(user_proxy);
 }
 
-static void on_new(const struct IMediator *self, const struct UserVO *user) {
+static void on_new(const struct IMediator *self, const UserVOObject *object) {
     g_print("New clicked: selection cleared\n");
     const struct INotifier *notifier = self->get_notifier(self);
     const struct IFacade *facade = notifier->get_facade(notifier);
     facade->send_notification(facade, NEW_USER, NULL, NULL);
 }
 
-static void on_delete(const struct IMediator *self, struct UserVO *user) {
-    g_print("Delete clicked for user: %s, %s %s, %s, dept=%d\n", user->username, user->first, user->last, user->email, user->department);
+static void on_delete(const struct IMediator *self, UserVOObject *object) {
+    g_print("Delete clicked for user: %s, %s %s, %s, dept=%d\n", object->user->username, object->user->first, object->user->last, object->user->email, object->user->department);
     const struct INotifier *notifier = self->get_notifier(self);
     const struct IFacade *facade = notifier->get_facade(notifier);
-    facade->send_notification(facade, DELETE_USER, user, NULL);
+    facade->send_notification(facade, DELETE_USER, object, NULL);
 }
 
-static void on_select(const struct IMediator *self, struct UserVO *user) {
+static void on_select(const struct IMediator *self, UserVOObject *object) {
     const struct INotifier *notifier = self->get_notifier(self);
     const struct IFacade *facade = notifier->get_facade(notifier);
-    facade->send_notification(facade, USER_SELECTED, user, NULL);
+    facade->send_notification(facade, USER_SELECTED, object, NULL);
 }
 
 #pragma endregion

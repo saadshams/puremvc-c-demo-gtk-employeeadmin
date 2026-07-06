@@ -21,10 +21,18 @@ static void execute(const struct ICommand *self, struct INotification *notificat
     facade->register_proxy(facade, user_proxy_new());
     facade->register_proxy(facade, role_proxy_new());
 
+    UserVOObject *larry = user_vo_object_new(user_vo_new("lstooge", "Larry", "Stooge", "larry@stooges.com", "ijk456", DEPT_ACCT));
+    UserVOObject *curly = user_vo_object_new(user_vo_new("cstooge", "Curly", "Stooge", "curly@stooges.com", "xyz987", DEPT_SALES));
+    UserVOObject *moe = user_vo_object_new(user_vo_new("mstooge", "Moe", "Stooge", "moe@stooges.com", "abc123", DEPT_PLANT));
+
     const struct UserProxy *user_proxy = facade->retrieve_proxy(facade, UserProxy_NAME)->sub;
-    user_proxy->save(user_proxy, user_vo_new("lstooge", "Larry", "Stooge", "larry@stooges.com", "ijk456", DEPT_ACCT));
-    user_proxy->save(user_proxy, user_vo_new("cstooge", "Curly", "Stooge", "curly@stooges.com", "xyz987", DEPT_SALES));
-    user_proxy->save(user_proxy, user_vo_new("mstooge", "Moe", "Stooge", "moe@stooges.com", "abc123", DEPT_PLANT));
+    user_proxy->save(user_proxy, larry);
+    user_proxy->save(user_proxy, curly);
+    user_proxy->save(user_proxy, moe);
+
+    g_object_unref(larry);
+    g_object_unref(curly);
+    g_object_unref(moe);
 
     // role_proxy->add_item(role_proxy, role_vo_new("lstooge", (enum RoleEnum[]) {ROLE_PAYROLL, ROLE_NONE_SELECTED}));
     // role_proxy->add_item(role_proxy, role_vo_new("cstooge", (enum RoleEnum[]) {ROLE_ACCT_PAY,

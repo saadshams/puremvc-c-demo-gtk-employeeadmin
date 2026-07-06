@@ -5,12 +5,12 @@
 
 #pragma region State
 
-static struct UserVO *user;
+static UserVOObject *object;
 static struct IUserForm delegate;
 
 #pragma endregion
 
-#pragma region UI Components
+#pragma region Widgets
 
 static GtkWidget *first, *last, *email, *username, *password, *confirm, *department;
 
@@ -22,25 +22,25 @@ static GtkWidget *first, *last, *email, *username, *password, *confirm, *departm
 static void on_update(GtkButton *button, gpointer data) {
     (void) button; (void) data;
 
-    if (!user) return;
+    if (object->user == NULL) return;
 
-    g_free(user->first);
-    g_free(user->last);
-    g_free(user->email);
-    g_free(user->username);
-    g_free(user->password);
+    g_free(object->user->first);
+    g_free(object->user->last);
+    g_free(object->user->email);
+    g_free(object->user->username);
+    g_free(object->user->password);
 
-    user->first = g_strdup(gtk_editable_get_text(GTK_EDITABLE(first)));
-    user->last = g_strdup(gtk_editable_get_text(GTK_EDITABLE(last)));
-    user->email = g_strdup(gtk_editable_get_text(GTK_EDITABLE(email)));
-    user->username = g_strdup(gtk_editable_get_text(GTK_EDITABLE(username)));
-    user->password = g_strdup(gtk_editable_get_text(GTK_EDITABLE(password)));
+    object->user->first = g_strdup(gtk_editable_get_text(GTK_EDITABLE(first)));
+    object->user->last = g_strdup(gtk_editable_get_text(GTK_EDITABLE(last)));
+    object->user->email = g_strdup(gtk_editable_get_text(GTK_EDITABLE(email)));
+    object->user->username = g_strdup(gtk_editable_get_text(GTK_EDITABLE(username)));
+    object->user->password = g_strdup(gtk_editable_get_text(GTK_EDITABLE(password)));
 
     guint position = gtk_drop_down_get_selected(GTK_DROP_DOWN(department));
-    user->department = position >= DEPT_COMBO_LIST_COUNT ? DEPT_NONE_SELECTED : DEPT_COMBO_LIST[position];
+    object->user->department = position >= DEPT_COMBO_LIST_COUNT ? DEPT_NONE_SELECTED : DEPT_COMBO_LIST[position];
 
-    if (user->validate(username, password, confirm, department))
-        delegate.on_update(delegate.context, user);
+    if (object->user->validate(username, password, confirm, department))
+        delegate.on_update(delegate.context, object->user);
 }
 
 static void on_cancel(GtkButton *button, gpointer data) {
@@ -160,7 +160,7 @@ GtkWidget *user_form_layout(GtkWidget *window) {
 }
 
 void user_form_reset(void) {
-    user = NULL;
+    object = NULL;
 
     gtk_editable_set_text(GTK_EDITABLE(first), "");
     gtk_editable_set_text(GTK_EDITABLE(last), "");
@@ -173,20 +173,21 @@ void user_form_reset(void) {
     gtk_drop_down_set_selected(GTK_DROP_DOWN(department), 0);
 }
 
-void user_form_set_user(struct UserVO *_user) {
-    user = _user;
+void user_form_set_user(UserVOObject *_object) {
+    // user = (struct UserVO *) _object->user;
+    object = _object;
 
-    gtk_editable_set_text(GTK_EDITABLE(first), user_vo_get_first(user));
-    gtk_editable_set_text(GTK_EDITABLE(last), user_vo_get_last(user));
-    gtk_editable_set_text(GTK_EDITABLE(email), user_vo_get_email(user));
-    gtk_editable_set_text(GTK_EDITABLE(username), user_vo_get_username(user));
+    gtk_editable_set_text(GTK_EDITABLE(first), user_vo_get_first(object->user));
+    gtk_editable_set_text(GTK_EDITABLE(last), user_vo_get_last(object->user));
+    gtk_editable_set_text(GTK_EDITABLE(email), user_vo_get_email(object->user));
+    gtk_editable_set_text(GTK_EDITABLE(username), user_vo_get_username(object->user));
     gtk_widget_set_sensitive(username, FALSE);
-    gtk_editable_set_text(GTK_EDITABLE(password), user->password ? user->password : "");
-    gtk_editable_set_text(GTK_EDITABLE(confirm), user->password ? user->password : "");
+    gtk_editable_set_text(GTK_EDITABLE(password), user_vo_get_password(object->user));
+    gtk_editable_set_text(GTK_EDITABLE(confirm), user_vo_get_password(object->user));
 
     guint position = 0;
     for (guint i = 0; i < DEPT_COMBO_LIST_COUNT; i++) {
-        if (DEPT_COMBO_LIST[i] == user->department) {
+        if (DEPT_COMBO_LIST[i] == object->user->department) {
             position = i;
             break;
         }

@@ -16,47 +16,62 @@ static void on_remove(struct IProxy *self) {
 
 #pragma region Operations
 
-static bool predicate(const void *element, const void *item) {
-    return strcmp(((struct UserVO *) element)->username, ((struct UserVO *) item)->username) == 0;
-}
-
-static struct IArray *find_all(const struct UserProxy *self) {
+static GListStore *find_all(const struct UserProxy *self) {
     const struct IProxy *super = self->super;
     return super->get_data(super);;
 }
 
-static bool save(const struct UserProxy *self, const struct UserVO *user) {
+static bool save(const struct UserProxy *self, UserVOObject *user) {
     const struct IProxy *super = self->super;
-    struct IArray *users = super->get_data(super);
+    GListStore *store = super->get_data(super);
 
-    if (users->find(users, predicate, user) != NULL)
-        return false;
+    const guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
+    for (guint i = 0; i < count; i++) {
+        UserVOObject *current = g_list_model_get_item(G_LIST_MODEL(store), i);
+        const bool found = strcmp(current->user->username, user->user->username) == 0;
+        g_object_unref(current);
 
-    users->push(users, user);
-    return true;
-}
+        if (found) return false;
+    }
 
-static bool update(const struct UserProxy *self, const struct UserVO *user) {
-    const struct IProxy *super = self->super;
-    struct IArray *users = super->get_data(super);
-
-    const size_t index = users->first_index(users, predicate, user);;
-    if (index == SIZE_MAX) return false;
-
-    struct UserVO *existing = users->put(users, user, index);
-    free(existing);
+    g_list_store_append(store, user);
 
     return true;
 }
 
-static bool delete(const struct UserProxy *self, const struct UserVO *user) {
+static bool update(const struct UserProxy *self, UserVOObject *user) {
     const struct IProxy *super = self->super;
-    struct IArray *users = super->get_data(super);
+    GListStore *store = super->get_data(super);
 
-    struct UserVO *removed = users->remove_item(users, user);
-    if (removed != NULL) {
-        free(removed);
-        return true;
+    const guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
+    for (guint i = 0; i < count; i++) {
+        UserVOObject *current = g_list_model_get_item(G_LIST_MODEL(store), i);
+        const bool found = strcmp(current->user->username, user->user->username) == 0;
+        g_object_unref(current);
+
+        if (found) {
+            g_list_store_splice(store, i, 1, (gpointer *) &user, 1);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static bool delete(const struct UserProxy *self, const UserVOObject *user) {
+    const struct IProxy *super = self->super;
+    GListStore *store = super->get_data(super);
+
+    const guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
+    for (guint i = 0; i < count; i++) {
+        UserVOObject *current = g_list_model_get_item(G_LIST_MODEL(store), i);
+        const bool found = strcmp(current->user->username, user->user->username) == 0;
+        g_object_unref(current);
+
+        if (found) {
+            g_list_store_remove(store, i);
+            return true;
+        }
     }
 
     return false;
@@ -99,18 +114,18 @@ static struct UserProxy *init(struct UserProxy *proxy) {
 #pragma region Public API
 
 struct IProxy *user_proxy_new(void) {
-    struct IArray *data = collection_array_new();
-    if (data == NULL) return NULL;
+    GListStore *store = g_list_store_new(user_vo_object_get_type());
+    if (store == NULL) return NULL;
 
-    struct IProxy *super = puremvc_proxy_new(UserProxy_NAME, data);
+    struct IProxy *super = puremvc_proxy_new(UserProxy_NAME, store);
     if (super == NULL) {
-        collection_array_dealloc(&data, NULL);
+        g_object_unref(store);
         return NULL;
     }
 
     struct UserProxy *proxy = init(alloc());
     if (proxy == NULL) {
-        collection_array_dealloc(&data, NULL);
+        g_object_unref(store);
         puremvc_proxy_dealloc(&super);
         return NULL;
     }
@@ -129,8 +144,8 @@ void user_proxy_dealloc(struct UserProxy **proxy) {
     if (proxy == NULL || *proxy == NULL) return;
 
     struct IProxy *super = (*proxy)->super;
-    struct IArray *data = super->get_data(super);
-    collection_array_dealloc(&data, free);
+    GListStore *store = super->get_data(super);
+    g_object_unref(store);
 
     puremvc_proxy_dealloc(&super); // Destroy super.
 

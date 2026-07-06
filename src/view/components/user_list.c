@@ -10,7 +10,7 @@ static struct IUserList delegate;
 
 #pragma endregion
 
-#pragma region UI Components
+#pragma region Widgets
 
 static GtkWidget *column_view;
 static GtkWidget *delete;
@@ -27,28 +27,18 @@ static void on_new(GtkButton *button, gpointer data) {
 
 static void on_delete(GtkButton *button, gpointer data) {
     (void) button; (void) data;
-    UserVOObject *object = gtk_single_selection_get_selected_item(selection);
-    const struct UserVO *user = object->user;
-    delegate.on_delete(delegate.context, user);
+    const UserVOObject *object = gtk_single_selection_get_selected_item(selection);
+    delegate.on_delete(delegate.context, object);
 }
 
 static void on_select(GtkSingleSelection *sel, GParamSpec *pspec, gpointer data) {
     (void) pspec; (void) data;
-    guint position = gtk_single_selection_get_selected(sel);
+    const guint position = gtk_single_selection_get_selected(sel);
     gtk_widget_set_sensitive(delete, position != GTK_INVALID_LIST_POSITION);
-
     if (position == GTK_INVALID_LIST_POSITION) return;
 
-    UserVOObject *object = gtk_single_selection_get_selected_item(sel);
-    if (!object || !object->user) {
-        g_clear_object(&object);
-        return;
-    }
-
-    delegate.on_select(delegate.context, object->user);
-
-    g_object_unref(object);
-
+    const UserVOObject *object = gtk_single_selection_get_selected_item(sel);
+    delegate.on_select(delegate.context, object);
 }
 
 static gboolean on_close_request(GtkWindow *window, gpointer data) {
@@ -191,20 +181,9 @@ GtkWidget *user_list_layout(GtkWidget *window) {
 }
 
 void user_list_load_users(void) {
-    const struct IArray *users = delegate.find_all(delegate.context);
-    const size_t count = users->count(users);
-
-    store = g_list_store_new(user_vo_object_get_type());
-
-    for (size_t i = 0; i < count; i++) {
-        UserVOObject *object = user_vo_object_new(users->get(users, i));
-
-        g_list_store_append(store, object);
-        g_object_unref(object);
-    }
+    store = delegate.find_all(delegate.context);
 
     selection = gtk_single_selection_new(G_LIST_MODEL(store));
-
     gtk_single_selection_set_autoselect(selection, FALSE);
     gtk_single_selection_set_can_unselect(selection, TRUE);
     gtk_single_selection_set_selected(selection, GTK_INVALID_LIST_POSITION);
@@ -215,7 +194,6 @@ void user_list_load_users(void) {
 
 void user_list_update_user(const struct UserVO *user) {
     const guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
-
     for (guint i = 0; i < count; i++) {
         UserVOObject *object = g_list_model_get_item(G_LIST_MODEL(store), i);
 

@@ -3,23 +3,27 @@
 #pragma region Accessors
 
 const char *user_vo_get_username(const struct UserVO *self) {
-    return self ? self->username : "";
+    return self->username ? self->username : "";
 }
 
 const char *user_vo_get_first(const struct UserVO *self) {
-    return self ? self->first : "";
+    return self->first ? self->first : "";
 }
 
 const char *user_vo_get_last(const struct UserVO *self) {
-    return self ? self->last : "";
+    return self->last ? self->last : "";
 }
 
 const char *user_vo_get_email(const struct UserVO *self) {
-    return self ? self->email : "";
+    return self->email ? self->email : "";
+}
+
+const char *user_vo_get_password(const struct UserVO *self) {
+    return self->password ? self->password : "";
 }
 
 const char *user_vo_get_department(const struct UserVO *self) {
-    return self ? dept_to_string(self->department) : "";
+    return self->department ? dept_to_string(self->department) : "";
 }
 
 #pragma endregion
@@ -63,7 +67,7 @@ static bool validate(GtkWidget *username, GtkWidget *password, GtkWidget *confir
 static const char *given_name(const struct UserVO *self, char *buffer, size_t buffer_size) {
     if (self == NULL || buffer == NULL || buffer_size == 0) return NULL;
 
-    snprintf(buffer, buffer_size, "%s, %s", self->last, self->first);
+    snprintf(buffer, buffer_size, "%s, %s", self->last ? self->last : "", self->first ? self->first : "");
     return buffer;
 }
 
@@ -81,7 +85,7 @@ static void user_vo_object_init(UserVOObject *self) {
     self->user = NULL;
 }
 
-UserVOObject *user_vo_object_new(const struct UserVO *user) {
+UserVOObject *user_vo_object_new(struct UserVO *user) {
     UserVOObject *object = g_object_new(user_vo_object_get_type(), NULL);
     object->user = user;
     return object;
