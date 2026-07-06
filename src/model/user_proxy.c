@@ -2,18 +2,6 @@
 
 #include <collection/i_array.h>
 
-#pragma region Hooks
-
-static void on_register(struct IProxy *self) {
-    (void) self;
-}
-
-static void on_remove(struct IProxy *self) {
-    (void) self;
-}
-
-#pragma endregion
-
 #pragma region Operations
 
 static GListStore *find_all(const struct UserProxy *self) {
@@ -21,36 +9,35 @@ static GListStore *find_all(const struct UserProxy *self) {
     return super->get_data(super);;
 }
 
-static bool save(const struct UserProxy *self, UserVOObject *user) {
+static bool save(const struct UserProxy *self, UserVOObject *object) {
     const struct IProxy *super = self->super;
     GListStore *store = super->get_data(super);
 
     const guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
     for (guint i = 0; i < count; i++) {
         UserVOObject *current = g_list_model_get_item(G_LIST_MODEL(store), i);
-        const bool found = strcmp(current->user->username, user->user->username) == 0;
+        const bool found = strcmp(current->user->username, object->user->username) == 0;
         g_object_unref(current);
 
         if (found) return false;
     }
 
-    g_list_store_append(store, user);
-
+    g_list_store_append(store, object);
     return true;
 }
 
-static bool update(const struct UserProxy *self, UserVOObject *user) {
+static bool update(const struct UserProxy *self, UserVOObject *object) {
     const struct IProxy *super = self->super;
     GListStore *store = super->get_data(super);
 
     const guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
     for (guint i = 0; i < count; i++) {
         UserVOObject *current = g_list_model_get_item(G_LIST_MODEL(store), i);
-        const bool found = strcmp(current->user->username, user->user->username) == 0;
+        const bool found = strcmp(current->user->username, object->user->username) == 0;
         g_object_unref(current);
 
         if (found) {
-            g_list_store_splice(store, i, 1, (gpointer *) &user, 1);
+            g_list_store_splice(store, i, 1, (gpointer *) &object, 1);
             return true;
         }
     }
@@ -58,14 +45,14 @@ static bool update(const struct UserProxy *self, UserVOObject *user) {
     return false;
 }
 
-static bool delete(const struct UserProxy *self, const UserVOObject *user) {
+static bool delete(const struct UserProxy *self, const UserVOObject *object) {
     const struct IProxy *super = self->super;
     GListStore *store = super->get_data(super);
 
     const guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
     for (guint i = 0; i < count; i++) {
         UserVOObject *current = g_list_model_get_item(G_LIST_MODEL(store), i);
-        const bool found = strcmp(current->user->username, user->user->username) == 0;
+        const bool found = strcmp(current->user->username, object->user->username) == 0;
         g_object_unref(current);
 
         if (found) {
@@ -129,9 +116,6 @@ struct IProxy *user_proxy_new(void) {
         puremvc_proxy_dealloc(&super);
         return NULL;
     }
-
-    super->on_register = on_register;
-    super->on_remove = on_remove;
 
     // wire bidirectional references
     super->sub = proxy; // interface to subclass

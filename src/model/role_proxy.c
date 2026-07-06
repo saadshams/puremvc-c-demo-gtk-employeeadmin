@@ -3,18 +3,6 @@
 #include <string.h>
 #include <collection/i_array.h>
 
-#pragma region Hooks
-
-static void on_register(struct IProxy *self) {
-    (void) self;
-}
-
-static void on_remove(struct IProxy *self) {
-    (void) self;
-}
-
-#pragma endregion
-
 #pragma region Operations
 
 static struct IArray *find_all(const struct RoleProxy *self) {
@@ -135,9 +123,6 @@ struct IProxy *role_proxy_new(void) {
         puremvc_proxy_dealloc(&super);
         return NULL;
     }
-
-    super->on_register = on_register;
-    super->on_remove = on_remove;
 
     // wire bidirectional references
     super->sub = proxy; // interface to subclass
