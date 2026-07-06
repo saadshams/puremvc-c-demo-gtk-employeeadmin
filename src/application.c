@@ -1,6 +1,5 @@
 #include "application.h"
 
-#include "application_facade.h"
 #include "view/user_list_mediator.h"
 #include "view/user_form_mediator.h"
 #include "view/user_role_mediator.h"
@@ -98,8 +97,9 @@ static void css_provider_new(void) {
         "  border: 1px solid red;"
         "}"
     );
-    gtk_style_context_add_provider_for_display(gdk_display_get_default(), GTK_STYLE_PROVIDER(provider),
-        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+    gtk_style_context_add_provider_for_display(gdk_display_get_default(),
+        GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     g_object_unref(provider);
 }
@@ -108,7 +108,7 @@ static void css_provider_new(void) {
 
 #pragma region Public API
 
-GtkApplication *application_new(gpointer data) {
+GtkApplication *application_new(struct ApplicationFacade *data) {
     GtkApplication *app = gtk_application_new("org.puremvc.employeeadmin", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), data);
     return app;
