@@ -99,11 +99,18 @@ static struct UserProxy *init(struct UserProxy *proxy) {
 #pragma region Public API
 
 struct IProxy *user_proxy_new(void) {
-    struct IProxy *super = puremvc_proxy_new(UserProxy_NAME, collection_array_new());
-    if (super == NULL) return NULL;
+    struct IArray *data = collection_array_new();
+    if (data == NULL) return NULL;
+
+    struct IProxy *super = puremvc_proxy_new(UserProxy_NAME, data);
+    if (super == NULL) {
+        collection_array_dealloc(&data, NULL);
+        return NULL;
+    }
 
     struct UserProxy *proxy = init(alloc());
     if (proxy == NULL) {
+        collection_array_dealloc(&data, NULL);
         puremvc_proxy_dealloc(&super);
         return NULL;
     }

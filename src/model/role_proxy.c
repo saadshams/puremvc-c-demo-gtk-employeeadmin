@@ -105,6 +105,8 @@ static struct RoleProxy *alloc(void) {
 static struct RoleProxy *init(struct RoleProxy *proxy) {
     if (proxy == NULL) return NULL;
 
+    memset(proxy, 0, size());
+
     proxy->find_all = find_all;
     proxy->add_item = add_item;
     proxy->add_role_to_user = add_role_to_user;
@@ -118,11 +120,18 @@ static struct RoleProxy *init(struct RoleProxy *proxy) {
 #pragma region Public API
 
 struct IProxy *role_proxy_new(void) {
-    struct IProxy *super = puremvc_proxy_new(RoleProxy_NAME, collection_array_new());
-    if (super == NULL) return NULL;
+    struct IArray *data = collection_array_new();
+    if (data == NULL) return NULL;
+
+    struct IProxy *super = puremvc_proxy_new(RoleProxy_NAME, data);
+    if (super == NULL) {
+        collection_array_dealloc(&data, NULL);
+        return NULL;
+    }
 
     struct RoleProxy *proxy = init(alloc());
     if (proxy == NULL) {
+        collection_array_dealloc(&data, NULL);
         puremvc_proxy_dealloc(&super);
         return NULL;
     }
