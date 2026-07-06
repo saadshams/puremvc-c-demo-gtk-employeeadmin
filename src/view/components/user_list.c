@@ -190,25 +190,23 @@ void user_list_load_users(void) {
     gtk_column_view_set_model(GTK_COLUMN_VIEW(column_view), GTK_SELECTION_MODEL(selection));
 }
 
-void user_list_update_user(const struct UserVO *user) {
+void user_list_update_user(const UserVOObject *object) {
     const guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
-    for (guint i = 0; i < count; i++) {
-        UserVOObject *object = g_list_model_get_item(G_LIST_MODEL(store), i);
 
-        if (object && object->user == user) {
-            UserVOObject *replacement = user_vo_object_new(user);
+    for (guint i = 0; i < count; i++) {
+        UserVOObject *current = g_list_model_get_item(G_LIST_MODEL(store), i);
+
+        if (current->user == object->user) {
+            UserVOObject *replacement = user_vo_object_new(object->user);
 
             g_list_store_splice(store, i, 1, (gpointer *) &replacement, 1);
 
             g_object_unref(replacement);
-            g_object_unref(object);
-
+            g_object_unref(current);
             return;
         }
 
-        if (object) {
-            g_object_unref(object);
-        }
+        g_object_unref(current);
     }
 }
 

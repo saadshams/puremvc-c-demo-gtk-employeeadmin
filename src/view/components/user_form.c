@@ -39,7 +39,7 @@ static void on_update(GtkButton *button, gpointer data) {
     object->user->department = position >= DEPT_COMBO_LIST_COUNT ? DEPT_NONE_SELECTED : DEPT_COMBO_LIST[position];
 
     if (object->user->validate(username, password, confirm, department))
-        delegate.on_update(delegate.context, object->user);
+        delegate.on_update(delegate.context, object);
 }
 
 static void on_cancel(GtkButton *button, gpointer data) {

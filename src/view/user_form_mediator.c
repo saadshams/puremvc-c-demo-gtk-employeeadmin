@@ -10,7 +10,7 @@ static void set_component(const struct UserFormMediator *self, void *component) 
 
     user_form_set_delegate((struct IUserForm) {
         .context = mediator,
-        .on_update = (void (*) (void *, void *)) self->on_update,
+        .on_update = (void (*) (void *, UserVOObject *)) self->on_update,
     });
 }
 
@@ -35,10 +35,10 @@ static void handle_notification(const struct IMediator *self, struct INotificati
 
 #pragma region Delegate Operations
 
-static void on_update(const struct IMediator *self, struct UserVO *user) {
+static void on_update(const struct IMediator *self, UserVOObject *object) {
     const struct INotifier *notifier = self->get_notifier(self);
     const struct IFacade *facade = notifier->get_facade(notifier);
-    facade->send_notification(facade, USER_UPDATED, user, NULL);
+    facade->send_notification(facade, USER_UPDATED, object, NULL);
     user_form_reset();
 }
 
