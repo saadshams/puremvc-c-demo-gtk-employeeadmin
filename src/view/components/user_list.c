@@ -213,7 +213,7 @@ void user_list_load_users(void) {
     gtk_column_view_set_model(GTK_COLUMN_VIEW(column_view), GTK_SELECTION_MODEL(selection));
 }
 
-void user_list_refresh(const struct UserVO *user) {
+void user_list_update_user(const struct UserVO *user) {
     const guint count = g_list_model_get_n_items(G_LIST_MODEL(store));
 
     for (guint i = 0; i < count; i++) {

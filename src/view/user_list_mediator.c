@@ -34,7 +34,7 @@ static const char *const *list_notification_interests(const struct IMediator *se
 static void handle_notification(const struct IMediator *self, struct INotification *notification) {
     const char *name = notification->get_name(notification);
     if (strcmp(name, USER_UPDATED) == 0) {
-        user_list_refresh(notification->get_body(notification));
+        user_list_update_user(notification->get_body(notification));
     }
 }
 

@@ -13,7 +13,7 @@
 static GtkWidget *layout(GtkWidget *window, gpointer data);
 static GtkWidget *master(GtkWidget *window, gpointer data);
 static GtkWidget *detail(GtkWidget *window, gpointer data);
-static void css_provider(void);
+static void css_provider_new(void);
 
 #pragma endregion
 
@@ -28,7 +28,8 @@ static void activate(GtkApplication *app, gpointer data) {
 
     gtk_window_set_child(GTK_WINDOW(window), layout(window, data));
     gtk_window_present(GTK_WINDOW(window));
-    css_provider();
+
+    css_provider_new();
 
     user_list_load_users();
 }
@@ -90,7 +91,7 @@ static GtkWidget *detail(GtkWidget *window, gpointer data) {
 
 #pragma region Styling
 
-static void css_provider(void) {
+static void css_provider_new(void) {
     GtkCssProvider *provider = gtk_css_provider_new();
     gtk_css_provider_load_from_string(provider,
         ".error {"
